@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, time
 import os
+import pip
 from io import BytesIO
 
 st.title("Form Survey Promo HCO Chain Bulan Maret 2025")
