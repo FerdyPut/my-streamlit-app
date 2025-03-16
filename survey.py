@@ -71,13 +71,12 @@ with tab1:
         tahun = st.selectbox("Tahun:", ["2025", "2026", "2027"],key="tahun")
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
-#HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
-
         tipe_outlet = st.selectbox("Tipe Outlet:", ["Indomaret", "Alfamart", "Indogrosir", "Lion Superindo", "Alfamidi","Clandys", "Family Mart"],key="tipe_outlet")
         tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
-        
-        # Step 2: Data produk per outlet
+
+-------------------------------------------#HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
+        # Data produk per outlet
         outlet_data = {
             "Indomaret": [
                 {
@@ -101,7 +100,7 @@ with tab1:
             # Tambah outlet dan produk lain di sini
         }
         
-        # Step 3: Tampilkan produk yang sesuai outlet
+        # Tampilkan produk yang sesuai outlet
         produk_list = outlet_data.get(tipe_outlet, [])
         produk_names = [p["nama_produk"] for p in produk_list]
         
