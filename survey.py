@@ -75,7 +75,7 @@ with tab1:
         tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
 
--------------------------------------------#HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
+#-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
         # Data produk per outlet
         outlet_data = {
             "Indomaret": [
