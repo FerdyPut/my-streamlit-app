@@ -104,17 +104,17 @@ with tab1:
         produk_list = outlet_data.get(tipe_outlet, [])
         produk_names = [p["nama_produk"] for p in produk_list]
         
-        if produk_list:
-            # Step 4: Pilih produk berdasarkan outlet
-            nama_produk = st.selectbox("Nama Produk:", produk_names, key="nama_produk")
-            
-            # Step 5: Ambil detail promo & periode
-            produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
-            
-            st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
-            st.text_input("Periode Promo:", value=produk_terpilih.get("periode_promo", ""), disabled=True)
-        else:
-            st.info("Belum ada produk untuk outlet ini.")
+            if produk_list:
+                # Pilih produk berdasarkan outlet
+                nama_produk = st.selectbox("Nama Produk:", produk_names, key="nama_produk")
+                
+                # Ambil detail promo & periode
+                produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
+                
+                st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
+                st.text_input("Periode Promo:", value=produk_terpilih.get("periode_promo", ""), disabled=True)
+            else:
+                st.info("Belum ada produk untuk outlet ini.")
 
         tanggal = st.date_input("Tanggal", value=datetime.today(),key="tanggal")
 
