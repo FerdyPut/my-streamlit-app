@@ -74,7 +74,7 @@ with tab1:
         tipe_outlet = st.selectbox("Tipe Outlet:", ["Indomaret", "Alfamart", "Indogrosir", "Lion Superindo", "Alfamidi","Clandys", "Family Mart"],key="tipe_outlet")
         tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
-        st.caption("Isikan - jika tidak tau)
+        st.caption("Isikan - jika tidak tau")
 
 #-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
         # Data produk per outlet
