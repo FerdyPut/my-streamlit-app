@@ -101,6 +101,7 @@ with tab1:
         }
         
         # Tampilkan produk yang sesuai outlet
+        tipe_outlet = "Alfamart"  # Example: Replace with actual outlet selection
         produk_list = outlet_data.get(tipe_outlet, [])
         produk_names = [p["nama_produk"] for p in produk_list]
         
@@ -111,10 +112,19 @@ with tab1:
             # Ambil detail promo & periode
             produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
             
+            # Tampilkan informasi promo dan periode
             st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
             st.text_input("Periode Promo:", value=produk_terpilih.get("periode_promo", ""), disabled=True)
+            
+            # Cek apakah jenis_promo mengandung kata 'gratis'
+            jenis_promo = produk_terpilih.get("jenis_promo", "").lower()
+            if "gratis" in jenis_promo:
+                st.text("Promo mengandung kata 'gratis'")
+            else:
+                st.text("Promo tidak mengandung kata 'gratis'")
         else:
             st.info("Belum ada produk untuk outlet ini.")
+
 
         tanggal = st.date_input("Tanggal", value=datetime.today(),key="tanggal")
 
@@ -149,7 +159,7 @@ with tab1:
             st.caption("Note: Harga Asli, sebelum potongan promo (angka nya saja)")
             expired_date = st.date_input(f"Tanggal Expired Date produk {nama_produk}", key="expired_date")
 
-            if jenis_promo and "gratis" in jenis_promo.lower():
+            if "gratis" in jenis_promo.lower():
                 sisa_stock = st.number_input(
                     f"Berapa sisa produk {nama_produk} yang tertera di display?",
                     min_value=0
