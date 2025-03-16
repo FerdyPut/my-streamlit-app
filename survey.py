@@ -76,7 +76,7 @@ with tab1:
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
 
 #-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
-        # Data produk per outlet
+         # Data produk per outlet
         outlet_data = {
             "Indomaret": [
                 {
@@ -100,8 +100,10 @@ with tab1:
             # Tambah outlet dan produk lain di sini
         }
         
+        # Pilih outlet
+        tipe_outlet = st.selectbox("Pilih Outlet:", list(outlet_data.keys()))
+        
         # Tampilkan produk yang sesuai outlet
-        tipe_outlet = "Alfamart"  # Example: Replace with actual outlet selection
         produk_list = outlet_data.get(tipe_outlet, [])
         produk_names = [p["nama_produk"] for p in produk_list]
         
