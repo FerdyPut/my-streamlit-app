@@ -70,6 +70,8 @@ with tab1:
         tahun = st.selectbox("Tahun:", ["2025", "2026", "2027"],key="tahun")
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
+#HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
+
         nama_produk = st.selectbox("Nama Produk:", ["Goriorio Vanilla 23 Gr", "French Fries 192 Gr"], key="nama_produk")
         promo_dict = {
             "Goriorio Vanilla 23 Gr": "Beli 2 pcs, gratis 1 pcs",
