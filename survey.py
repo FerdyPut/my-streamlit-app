@@ -77,32 +77,45 @@ with tab1:
         tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
         
-        # Dictionary data per outlet
+        # Step 2: Data produk per outlet
         outlet_data = {
-            "Indomaret": {
-                "nama_produk": "Goriorio Vanilla 23 Gr",
-                "jenis_promo": "Beli 1 pcs, gratis 1 pcs",
-                "periode_promo": "1 - 5 April 2025"
-            },
-            "Alfamart": {
-                "nama_produk": "French Fries 192 Gr",
-                "jenis_promo": "Beli 1 pcs, potongan Rp. 200",
-                "periode_promo": "5 - 9 April 2025"
-            },
-            # kamu bisa tambahkan outlet lain di sini
+            "Indomaret": [
+                {
+                    "nama_produk": "Goriorio Vanilla 23 Gr",
+                    "jenis_promo": "Beli 1 pcs, gratis 1 pcs",
+                    "periode_promo": "1 - 5 April 2025"
+                }
+            ],
+            "Alfamart": [
+                {
+                    "nama_produk": "French Fries 192 Gr",
+                    "jenis_promo": "Beli 1 pcs, potongan Rp. 200",
+                    "periode_promo": "5 - 9 April 2025"
+                },
+                {
+                    "nama_produk": "Goriorio Vanilla 23 Gr",
+                    "jenis_promo": "Beli 2 pcs, gratis 1 pcs",
+                    "periode_promo": "6 - 10 April 2025"
+                }
+            ],
+            # Tambah outlet dan produk lain di sini
         }
         
-        # Ambil data sesuai pilihan outlet
-        data = outlet_data.get(tipe_outlet, {
-            "nama_produk": "",
-            "jenis_promo": "",
-            "periode_promo": ""
-        })
+        # Step 3: Tampilkan produk yang sesuai outlet
+        produk_list = outlet_data.get(tipe_outlet, [])
+        produk_names = [p["nama_produk"] for p in produk_list]
         
-        # Isi otomatis sesuai outlet
-        st.text_input("Nama Produk:", value=data["nama_produk"], disabled=True)
-        st.text_input("Jenis Promo:", value=data["jenis_promo"], disabled=True)
-        st.text_input("Periode Promo:", value=data["periode_promo"], disabled=True)
+        if produk_list:
+            # Step 4: Pilih produk berdasarkan outlet
+            nama_produk = st.selectbox("Nama Produk:", produk_names, key="nama_produk")
+            
+            # Step 5: Ambil detail promo & periode
+            produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
+            
+            st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
+            st.text_input("Periode Promo:", value=produk_terpilih.get("periode_promo", ""), disabled=True)
+        else:
+            st.info("Belum ada produk untuk outlet ini.")
 
         tanggal = st.date_input("Tanggal", value=datetime.today(),key="tanggal")
 
