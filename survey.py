@@ -123,7 +123,7 @@ with tab1:
             if "gratis" in jenis_promo:
                 st.text("Promo mengandung Gratis 1 pcs")
             else:
-                st.text("Promo hanya potongan harga'")
+                st.text("Promo hanya potongan harga")
         else:
             st.info("Belum ada produk untuk outlet ini.")
 
