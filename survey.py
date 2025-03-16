@@ -72,24 +72,37 @@ with tab1:
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
 #HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
+
         tipe_outlet = st.selectbox("Tipe Outlet:", ["Indomaret", "Alfamart", "Indogrosir", "Lion Superindo", "Alfamidi","Clandys", "Family Mart"],key="tipe_outlet")
         tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
         
-        nama_produk = st.selectbox("Nama Produk:", ["Goriorio Vanilla 23 Gr", "French Fries 192 Gr"], key="nama_produk")
-        promo_dict = {
-            "Goriorio Vanilla 23 Gr": "Beli 2 pcs, gratis 1 pcs",
-            "French Fries 192 Gr": "Beli 1 pcs, potongan Rp. 200"
+        # Dictionary data per outlet
+        outlet_data = {
+            "Indomaret": {
+                "nama_produk": "Goriorio Vanilla 23 Gr",
+                "jenis_promo": "Beli 1 pcs, gratis 1 pcs",
+                "periode_promo": "1 - 5 April 2025"
+            },
+            "Alfamart": {
+                "nama_produk": "French Fries 192 Gr",
+                "jenis_promo": "Beli 1 pcs, potongan Rp. 200",
+                "periode_promo": "5 - 9 April 2025"
+            },
+            # kamu bisa tambahkan outlet lain di sini
         }
-        periode_dict = {
-            "Goriorio Vanilla 23 Gr": "1 - 5 April 2025",
-            "French Fries 192 Gr": "12 - 16 April 2025"
-        }
-        jenis_promo = promo_dict.get(nama_produk)
-        periode_promo = periode_dict.get(nama_produk)
         
-        st.text_input("Jenis Promo:", value=jenis_promo, disabled=True)
-        st.text_input("Periode Promo:", value=periode_promo, disabled=True)
+        # Ambil data sesuai pilihan outlet
+        data = outlet_data.get(tipe_outlet, {
+            "nama_produk": "",
+            "jenis_promo": "",
+            "periode_promo": ""
+        })
+        
+        # Isi otomatis sesuai outlet
+        st.text_input("Nama Produk:", value=data["nama_produk"], disabled=True)
+        st.text_input("Jenis Promo:", value=data["jenis_promo"], disabled=True)
+        st.text_input("Periode Promo:", value=data["periode_promo"], disabled=True)
 
         tanggal = st.date_input("Tanggal", value=datetime.today(),key="tanggal")
 
