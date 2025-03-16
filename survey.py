@@ -74,9 +74,10 @@ with tab1:
         tipe_outlet = st.selectbox("Tipe Outlet:", ["Indomaret", "Alfamart", "Indogrosir", "Lion Superindo", "Alfamidi","Clandys", "Family Mart"],key="tipe_outlet")
         tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
+        st.caption("Isikan - jika tidak tau)
 
 #-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
-         # Data produk per outlet
+        # Data produk per outlet
         outlet_data = {
             "Indomaret": [
                 {
@@ -114,16 +115,19 @@ with tab1:
             # Ambil detail promo & periode
             produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
             
+            # Ambil periode promo
+            periode_promo = produk_terpilih.get("periode_promo", "")
+            
             # Tampilkan informasi promo dan periode
             st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
-            st.text_input("Periode Promo:", value=produk_terpilih.get("periode_promo", ""), disabled=True)
+            st.text_input("Periode Promo:", value=periode_promo, disabled=True)
             
             # Cek apakah jenis_promo mengandung kata 'gratis'
             jenis_promo = produk_terpilih.get("jenis_promo", "").lower()
             if "gratis" in jenis_promo:
-                st.text("Promo mengandung Gratis 1 pcs")
+                st.text("Promo mengandung kata 'gratis'")
             else:
-                st.text("Promo hanya potongan harga")
+                st.text("Promo tidak mengandung kata 'gratis'")
         else:
             st.info("Belum ada produk untuk outlet ini.")
 
@@ -244,7 +248,7 @@ with tab1:
                             "Tahun": tahun,
                             "Nama Produk": nama_produk,
                             "Periode Promo": periode_promo,
-                            "Jenis Promo": jenis_promo,
+                            "Jenis Promo": produk_terpilih.get("jenis_promo", ""),
                             "Periode Survey": "-",  # Kosong dulu
                             "Kota": kota,
                             "Kode Outlet": kode_outlet,
