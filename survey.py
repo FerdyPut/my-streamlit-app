@@ -121,9 +121,9 @@ with tab1:
             # Cek apakah jenis_promo mengandung kata 'gratis'
             jenis_promo = produk_terpilih.get("jenis_promo", "").lower()
             if "gratis" in jenis_promo:
-                st.text("Promo mengandung kata 'gratis'")
+                st.text("Promo mengandung Gratis 1 pcs")
             else:
-                st.text("Promo tidak mengandung kata 'gratis'")
+                st.text("Promo hanya potongan harga'")
         else:
             st.info("Belum ada produk untuk outlet ini.")
 
