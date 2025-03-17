@@ -328,10 +328,10 @@ with tab2:
         st.session_state.admin_login = False
 
     if not st.session_state.admin_login:
-        st.subheader("🔒 Login Admin untuk Akses Overview")
+        st.subheader("🔒 Akses Overview Data")
         password = st.text_input("Masukkan Password:", type="password")
         if st.button("Login"):
-            if password == "admin123":  # Ganti sesuai kebutuhanmu
+            if password == "mis01":  # Ganti sesuai kebutuhanmu
                 st.session_state.admin_login = True
                 st.success("Login berhasil! Silakan akses data.")
                 st.rerun()
