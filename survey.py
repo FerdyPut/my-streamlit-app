@@ -324,19 +324,19 @@ with tab1:
                         st.success("Data Sudah Tersimpan di Overview Excel!")
                         st.info("Jikalau mau menginput data lagi silahkan refresh website!")   
 with tab2:
-     if "admin_login" not in st.session_state:
-            st.session_state.admin_login = False
-    
-        if not st.session_state.admin_login:
-            st.subheader("🔒 Login Admin untuk Akses Overview")
-            password = st.text_input("Masukkan Password:", type="password")
-            if st.button("Login"):
-                if password == "admin123":  # Ganti password sesuai kebutuhanmu
-                    st.session_state.admin_login = True
-                    st.success("Login berhasil! Silakan akses data.")
-                else:
-                    st.error("Password salah, coba lagi.")
-        else:
+    if "admin_login" not in st.session_state:
+        st.session_state.admin_login = False
+
+    if not st.session_state.admin_login:
+        st.subheader("🔒 Login Admin untuk Akses Overview")
+        password = st.text_input("Masukkan Password:", type="password")
+        if st.button("Login"):
+            if password == "admin123":  # Ganti sesuai kebutuhanmu
+                st.session_state.admin_login = True
+                st.success("Login berhasil! Silakan akses data.")
+            else:
+                st.error("Password salah, coba lagi.")
+    else:
             st.header("Hasil Inputan Data Survey Promo HCO Chain")
             st.markdown("""
             **Petunjuk Penggunaan:**
