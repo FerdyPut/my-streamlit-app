@@ -348,6 +348,11 @@ with tab2:
             - Klik **Download Excel** untuk mengunduh data dalam format Excel.
             - **Surveyor** tidak perlu mendownload excel, dan jikalau revisi bisa dilakukan edit data atau delete data.
             """)
+            st.markdown("---")
+                if st.button("Logout ❌"):
+                    st.session_state.admin_login = False
+                    st.success("Berhasil logout.")
+                    st.rerun()
             if os.path.exists(file_path):
                 df_existing = pd.read_excel(file_path, engine='openpyxl')
         
@@ -388,15 +393,21 @@ with tab2:
                 
                         confirm = st.checkbox("Saya yakin ingin menghapus semua data")
                 
-                        if confirm:
-                            if st.button("Konfirmasi Hapus", key="confirm_hapus"):
-                                try:
-                                    os.remove(file_path)
-                                    st.success("✅ Semua data berhasil dihapus.")
-                                except FileNotFoundError:
-                                    st.error("❌ File tidak ditemukan.")
+                        col_confirm, col_cancel = st.columns(2)
+                        with col_confirm:
+                            if confirm:
+                                if st.button("Konfirmasi Hapus", key="confirm_hapus"):
+                                    try:
+                                        os.remove(file_path)
+                                        st.success("✅ Semua data berhasil dihapus.")
+                                    except FileNotFoundError:
+                                        st.error("❌ File tidak ditemukan.")
+                                    st.session_state.show_confirm = False
+                                    st.rerun()
+                        with col_cancel:
+                            if st.button("Kembali", key="cancel_hapus"):
                                 st.session_state.show_confirm = False
-                                st.rerun()
+                                st.info("Penghapusan data dibatalkan.")
                                 
                 with colC:
                     st.download_button(
@@ -405,10 +416,5 @@ with tab2:
                         file_name="data_survey.xlsx",
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
-            st.markdown("---")
-            if st.button("Logout ❌"):
-                st.session_state.admin_login = False
-                st.success("Berhasil logout.")
-                st.rerun()
             else:
                 st.info("Belum ada data yang tersimpan.")
