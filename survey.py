@@ -321,7 +321,7 @@ with tab1:
                         df_existing.to_excel(file_path, index=False, engine='openpyxl')
                         import time
 
-                        st.success("Data Sudah Tersimpan di Overview Excel!")
+                        st.success("Data Sudah Tersimpan!")
                         st.info("Jikalau mau menginput data lagi silahkan refresh website!")   
 with tab2:
     if "admin_login" not in st.session_state:
@@ -408,7 +408,7 @@ with tab2:
                             if st.button("Kembali", key="cancel_hapus"):
                                 st.session_state.show_confirm = False
                                 st.info("Penghapusan data dibatalkan.")
-                                
+                                st.rerun()
                 with colC:
                     st.download_button(
                         label="Download Excel",
