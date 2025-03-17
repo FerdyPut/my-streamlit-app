@@ -73,10 +73,6 @@ with tab1:
         tahun = st.selectbox("Tahun:", ["2025", "2026", "2027"],key="tahun")
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
-        tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
-        kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
-        st.caption("Isikan - jika tidak tau")
-
 #-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
         # Data produk per outlet
         outlet_data = {
@@ -133,6 +129,10 @@ with tab1:
             st.info("Belum ada produk untuk outlet ini.")
 
 
+        tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
+        kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
+        st.caption("Isikan - jika tidak tau")
+        
         tanggal = st.date_input("Tanggal", value=datetime.today(),key="tanggal")
 
         col1, col2 = st.columns(2)
