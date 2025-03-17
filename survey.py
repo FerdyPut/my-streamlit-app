@@ -4,6 +4,8 @@ from datetime import datetime, time
 import os
 from io import BytesIO
 import openpyxl
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 st.title("Form Survey Promo HCO Chain Bulan Maret 2025")
 background_url = "https://upload.wikimedia.org/wikipedia/commons/c/cc/Logo_Siantar_Top.svg"
@@ -241,7 +243,7 @@ with tab1:
                         else:
                             kode_stock = "-"
                         new_data = {
-                            "Timestamp Pengisian": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                            "Timestamp Pengisian" : datetime.now(ZoneInfo('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S'),
                             "Tipe Outlet": tipe_outlet,
                             "Tipe Account": tipe_account,
                             "Bulan": bulan,
