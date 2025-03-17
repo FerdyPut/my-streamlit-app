@@ -334,6 +334,7 @@ with tab2:
             if password == "admin123":  # Ganti sesuai kebutuhanmu
                 st.session_state.admin_login = True
                 st.success("Login berhasil! Silakan akses data.")
+                st.experimental_rerun()
             else:
                 st.error("Password salah, coba lagi.")
     else:
