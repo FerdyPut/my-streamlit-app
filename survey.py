@@ -230,8 +230,38 @@ with tab1:
                     info_struk = st.text_input("Informasi potongan harga yang tertera di struk:",key="info_struk")
 
                 if st.button("Submit"):
+                    errors = []
+                
+                    # Validasi field wajib utama
                     if not nama_surveyor or not kode_outlet or not kota:
-                        st.error("Nama Surveyor, Kode Outlet, dan Kota wajib diisi!")
+                        errors.append("Nama Surveyor, Kode Outlet, dan Kota wajib diisi!")
+                
+                    # Validasi tambahan jika produk_display sudah dipilih
+                    if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
+                        if promo_mailer.strip() == "":
+                            errors.append("Promo Mailer wajib diisi.")
+                        if promo_mailer == "Tidak Tahu" and keterangan.strip() == "":
+                            errors.append("Keterangan wajib diisi jika memilih 'Tidak Tahu' pada promo mailer.")
+                        if material_promo.strip() == "":
+                            errors.append("Material Promo wajib diisi.")
+                        if material_promo == "Tidak" and alasan_material.strip() == "":
+                            errors.append("Alasan Material wajib diisi jika material tidak terpasang.")
+                        if promo_di_kasir.strip() == "":
+                            errors.append("Promo di server kasir wajib diisi.")
+                        if info_struk.strip() == "":
+                            errors.append("Informasi potongan harga di struk wajib diisi.")
+                        if produk_display == "Iya":
+                            if harga_produk is None or harga_produk == 0:
+                                errors.append("Harga produk wajib diisi jika produk terdisplay.")
+                            if expired_date is None:
+                                errors.append("Tanggal expired wajib diisi jika produk terdisplay.")
+                            if "gratis" in jenis_promo and (sisa_stock is None):
+                                errors.append("Sisa stock wajib diisi untuk promo yang mengandung 'gratis'.")
+                
+                    # Jika ada error, tampilkan semua
+                    if errors:
+                        for err in errors:
+                            st.error(err)
                     else:
                         # Logic untuk Kode Stock
                         if sisa_stock is not None:
