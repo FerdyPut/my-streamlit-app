@@ -160,7 +160,7 @@ with tab1:
 
         if produk_display == "Iya":
             harga_produk = st.number_input(
-                f"Berapa harga produk {nama_produk} yang tertera di rak / server kasir?",
+                f"Berapa harga produk {nama_produk} per pcs yang tertera di rak / server kasir?",
                 min_value=0
             , key="harga_produk")
             st.caption("Note: Harga Asli, sebelum potongan promo (angka nya saja)")
@@ -168,7 +168,7 @@ with tab1:
 
             if "gratis" in jenis_promo.lower():
                 sisa_stock = st.number_input(
-                    f"Berapa sisa produk {nama_produk} yang tertera di display?",
+                    f"Berapa sisa produk {nama_produk} per pcs yang tertera di display?",
                     min_value=0
                 , key="sisa_stock")
                 st.caption("Note: Kalau tidak ada/kosong/habis isi 0")
