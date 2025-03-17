@@ -73,7 +73,6 @@ with tab1:
         tahun = st.selectbox("Tahun:", ["2025", "2026", "2027"],key="tahun")
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
-        tipe_outlet = st.selectbox("Tipe Outlet:", ["Indomaret", "Alfamart", "Indogrosir", "Lion Superindo", "Alfamidi","Clandys", "Family Mart"],key="tipe_outlet")
         tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
         st.caption("Isikan - jika tidak tau")
