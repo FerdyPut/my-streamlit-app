@@ -331,10 +331,22 @@ with tab2:
                 st.rerun()
 
         with colB:
+            # Tombol awal untuk trigger konfirmasi
             if st.button("Hapus Semua Data"):
-                os.remove(file_path)
-                st.success("Semua data berhasil dihapus.")
-                st.rerun()
+                st.session_state.show_confirm = True
+        
+            # Tampilkan konfirmasi jika tombol ditekan
+            if st.session_state.get("show_confirm", False):
+                st.warning("Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan!")
+        
+                confirm = st.checkbox("Saya yakin ingin menghapus semua data")
+        
+                if confirm:
+                    if st.button("Konfirmasi Hapus", key="confirm_button"):
+                        os.remove(file_path)
+                        st.success("Semua data berhasil dihapus.")
+                        st.session_state.show_confirm = False
+                        st.rerun()
 
         with colC:
             st.download_button(
