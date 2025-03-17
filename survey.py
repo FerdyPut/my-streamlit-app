@@ -324,73 +324,86 @@ with tab1:
                         st.success("Data Sudah Tersimpan di Overview Excel!")
                         st.info("Jikalau mau menginput data lagi silahkan refresh website!")   
 with tab2:
-    st.header("Hasil Inputan Data Survey Promo HCO Chain")
-    st.markdown("""
-    **Petunjuk Penggunaan:**
-    - Data survey yang sudah diinput akan tampil di bawah ini dan dapat langsung diedit.
-    - Klik **Simpan Perubahan** untuk menyimpan perubahan data setelah merubah data langsung pada tabel di bawah.
-    - Untuk Menghapus satu baris data: **Checkbox** pada bagian kiri sendiri di suatu baris yang ingin dihapus kemudian klik gambar **icon hapus** pada pojok kanan tabel (kecil), setelah itu klik **simpan perubahan**
-    - Klik **Hapus Semua Data** jika ingin menghapus seluruh data survey.
-    - Klik **Download Excel** untuk mengunduh data dalam format Excel.
-    - **Surveyor** tidak perlu mendownload excel, dan jikalau revisi bisa dilakukan edit data atau delete data.
-    """)
-    if os.path.exists(file_path):
-        df_existing = pd.read_excel(file_path, engine='openpyxl')
-
-        edited_df = st.data_editor(
-            df_existing,
-            use_container_width=True,
-            num_rows="dynamic",
-            key="editor",
-            disabled=False
-        )
-
-        buffer = BytesIO()
-        edited_df.to_excel(buffer, index=False, engine='openpyxl')
-        buffer.seek(0)
-
-        buffer = BytesIO()
-        edited_df.fillna("-").to_excel(buffer, index=False, engine='openpyxl')
-        buffer.seek(0)
-        colA, colB, colC = st.columns(3)
-
-        with colA:
-            if st.button("Simpan Perubahan"):
-                edited_df.to_excel(file_path, index=False, engine='openpyxl')
-                st.success("Perubahan berhasil disimpan.")
-                st.rerun()
-
-        with colB:
-            # Tombol awal untuk trigger konfirmasi
-            if "show_confirm" not in st.session_state:
-                st.session_state.show_confirm = False
+     if "admin_login" not in st.session_state:
+            st.session_state.admin_login = False
+    
+        if not st.session_state.admin_login:
+            st.subheader("🔒 Login Admin untuk Akses Overview")
+            password = st.text_input("Masukkan Password:", type="password")
+            if st.button("Login"):
+                if password == "admin123":  # Ganti password sesuai kebutuhanmu
+                    st.session_state.admin_login = True
+                    st.success("Login berhasil! Silakan akses data.")
+                else:
+                    st.error("Password salah, coba lagi.")
+        else:
+            st.header("Hasil Inputan Data Survey Promo HCO Chain")
+            st.markdown("""
+            **Petunjuk Penggunaan:**
+            - Data survey yang sudah diinput akan tampil di bawah ini dan dapat langsung diedit.
+            - Klik **Simpan Perubahan** untuk menyimpan perubahan data setelah merubah data langsung pada tabel di bawah.
+            - Untuk Menghapus satu baris data: **Checkbox** pada bagian kiri sendiri di suatu baris yang ingin dihapus kemudian klik gambar **icon hapus** pada pojok kanan tabel (kecil), setelah itu klik **simpan perubahan**
+            - Klik **Hapus Semua Data** jika ingin menghapus seluruh data survey.
+            - Klik **Download Excel** untuk mengunduh data dalam format Excel.
+            - **Surveyor** tidak perlu mendownload excel, dan jikalau revisi bisa dilakukan edit data atau delete data.
+            """)
+            if os.path.exists(file_path):
+                df_existing = pd.read_excel(file_path, engine='openpyxl')
         
-            if st.button("Hapus Semua Data"):
-                st.session_state.show_confirm = True
+                edited_df = st.data_editor(
+                    df_existing,
+                    use_container_width=True,
+                    num_rows="dynamic",
+                    key="editor",
+                    disabled=False
+                )
         
-            # Jika tombol sudah ditekan, baru munculkan konfirmasi
-            if st.session_state.show_confirm:
-                st.warning("⚠️ Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan!")
+                buffer = BytesIO()
+                edited_df.to_excel(buffer, index=False, engine='openpyxl')
+                buffer.seek(0)
         
-                confirm = st.checkbox("Saya yakin ingin menghapus semua data")
+                buffer = BytesIO()
+                edited_df.fillna("-").to_excel(buffer, index=False, engine='openpyxl')
+                buffer.seek(0)
+                colA, colB, colC = st.columns(3)
         
-                if confirm:
-                    if st.button("Konfirmasi Hapus", key="confirm_hapus"):
-                        try:
-                            os.remove(file_path)
-                            st.success("✅ Semua data berhasil dihapus.")
-                        except FileNotFoundError:
-                            st.error("❌ File tidak ditemukan.")
-                        st.session_state.show_confirm = False
+                with colA:
+                    if st.button("Simpan Perubahan"):
+                        edited_df.to_excel(file_path, index=False, engine='openpyxl')
+                        st.success("Perubahan berhasil disimpan.")
                         st.rerun()
-                        
-        with colC:
-            st.download_button(
-                label="Download Excel",
-                data=buffer,
-                file_name="data_survey.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
-
-    else:
-        st.info("Belum ada data yang tersimpan.")
+        
+                with colB:
+                    # Tombol awal untuk trigger konfirmasi
+                    if "show_confirm" not in st.session_state:
+                        st.session_state.show_confirm = False
+                
+                    if st.button("Hapus Semua Data"):
+                        st.session_state.show_confirm = True
+                
+                    # Jika tombol sudah ditekan, baru munculkan konfirmasi
+                    if st.session_state.show_confirm:
+                        st.warning("⚠️ Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan!")
+                
+                        confirm = st.checkbox("Saya yakin ingin menghapus semua data")
+                
+                        if confirm:
+                            if st.button("Konfirmasi Hapus", key="confirm_hapus"):
+                                try:
+                                    os.remove(file_path)
+                                    st.success("✅ Semua data berhasil dihapus.")
+                                except FileNotFoundError:
+                                    st.error("❌ File tidak ditemukan.")
+                                st.session_state.show_confirm = False
+                                st.rerun()
+                                
+                with colC:
+                    st.download_button(
+                        label="Download Excel",
+                        data=buffer,
+                        file_name="data_survey.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
+        
+            else:
+                st.info("Belum ada data yang tersimpan.")
