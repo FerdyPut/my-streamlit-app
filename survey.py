@@ -412,10 +412,10 @@ with tab2:
                         file_name="data_survey.xlsx",
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
-            st.markdown("---")
-            if st.button("Logout ❌"):
-                    st.session_state.admin_login = False
-                    st.success("Berhasil logout.")
-                    st.rerun()
+                st.markdown("---")
+                if st.button("Logout ❌"):
+                        st.session_state.admin_login = False
+                        st.success("Berhasil logout.")
+                        st.rerun()
             else:
                 st.info("Belum ada data yang tersimpan.")
