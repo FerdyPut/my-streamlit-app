@@ -349,7 +349,7 @@ with tab2:
             - **Surveyor** tidak perlu mendownload excel, dan jikalau revisi bisa dilakukan edit data atau delete data.
             """)
             st.markdown("---")
-                if st.button("Logout ❌"):
+            if st.button("Logout ❌"):
                     st.session_state.admin_login = False
                     st.success("Berhasil logout.")
                     st.rerun()
