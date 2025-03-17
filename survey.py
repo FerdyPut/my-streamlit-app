@@ -332,22 +332,28 @@ with tab2:
 
         with colB:
             # Tombol awal untuk trigger konfirmasi
+            if "show_confirm" not in st.session_state:
+                st.session_state.show_confirm = False
+        
             if st.button("Hapus Semua Data"):
                 st.session_state.show_confirm = True
         
-            # Tampilkan konfirmasi jika tombol ditekan
-            if st.session_state.get("show_confirm", False):
-                st.warning("Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan!")
+            # Jika tombol sudah ditekan, baru munculkan konfirmasi
+            if st.session_state.show_confirm:
+                st.warning("⚠️ Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan!")
         
                 confirm = st.checkbox("Saya yakin ingin menghapus semua data")
         
                 if confirm:
-                    if st.button("Konfirmasi Hapus", key="confirm_button"):
-                        os.remove(file_path)
-                        st.success("Semua data berhasil dihapus.")
+                    if st.button("Konfirmasi Hapus", key="confirm_hapus"):
+                        try:
+                            os.remove(file_path)
+                            st.success("✅ Semua data berhasil dihapus.")
+                        except FileNotFoundError:
+                            st.error("❌ File tidak ditemukan.")
                         st.session_state.show_confirm = False
                         st.rerun()
-
+                        
         with colC:
             st.download_button(
                 label="Download Excel",
