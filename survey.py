@@ -7,7 +7,7 @@ import openpyxl
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-st.title("Form Survey Promo HCO Chain Bulan Maret 2025")
+st.title("Form Survey Promo HCO Chain dan Lokal Tahun 2025")
 background_url = "https://upload.wikimedia.org/wikipedia/commons/c/cc/Logo_Siantar_Top.svg"
 
 st.markdown(
@@ -142,7 +142,20 @@ with tab1:
                     st.info("Belum ada produk untuk outlet ini.")
 
 
-        tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
+        # Daftar outlet yang termasuk Chain
+        chain_outlet = [
+            "Indomaret", "Indogrosir", "Alfamart", 
+            "Alfamidi", "Lion Superindo", "Clandys", "Family Mart"
+        ]
+        
+        # Tentukan tipe account berdasarkan outlet yang dipilih
+        if tipe_outlet in chain_outlet:
+            tipe_account_value = "Chain"
+        else:
+            tipe_account_value = "Lokal"
+        
+        # Tampilkan tipe account (disabled)
+        tipe_account = st.selectbox("Tipe Account:", ["Chain", "Lokal"], index=0 if tipe_account_value == "Chain" else 1, disabled=True)
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
         st.caption("Isikan - jika tidak tau")
         
