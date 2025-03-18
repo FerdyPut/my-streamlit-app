@@ -400,6 +400,7 @@ with tab2:
             - Klik **Download Excel** untuk mengunduh data dalam format Excel.
             - **Surveyor** tidak perlu mendownload excel, dan jikalau revisi bisa dilakukan edit data atau delete data.
             """)
+            st.markdown(" Link Spreadsheet untuk Update Data Produk/Promo/Survey: https://intip.in/UpdateProdukPromoSurveyHCO ")
             
             if os.path.exists(file_path):
                 df_existing = pd.read_excel(file_path, engine='openpyxl')
