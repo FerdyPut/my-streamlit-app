@@ -175,7 +175,7 @@ with tab1:
         ],key="kota")
         alamat_outlet = st.text_input("Alamat Outlet:",key="alamat_outlet")
         
-   #---------------------------------------------------------------DISPLAY PRODUK
+#---------------------------------------------------------------DISPLAY PRODUK
         st.subheader(f"Detail Produk")
         produk_display = st.selectbox(
             f"Apakah produk {nama_produk} terdisplay di toko?", 
@@ -195,41 +195,41 @@ with tab1:
         info_struk = "-"
         
         # --- Chain khusus ---
-        if produk_display == "Iya":
-            if tipe_account_value in ["Chain", "Lokal"]:
-                harga_produk = st.number_input(
-                    f"Berapa harga produk {nama_produk} per pcs yang tertera di rak / server kasir?",
-                    min_value=0, key="harga_produk"
-                )
-                st.caption("Note: Harga Asli, sebelum potongan promo (angka nya saja)")
-        
-                if "gratis" in jenis_promo.lower():
-                    sisa_stock = st.number_input(
-                        f"Berapa sisa produk {nama_produk} per pcs yang tertera di display?",
-                        min_value=0, key="sisa_stock"
+        if produk_display.strip() != "":
+            if produk_display == "Iya":
+                if tipe_account_value in ["Chain", "Lokal"]:
+                    harga_produk = st.number_input(
+                        f"Berapa harga produk {nama_produk} per pcs yang tertera di rak / server kasir?",
+                        min_value=0, key="harga_produk"
                     )
-                    st.caption("Note: Kalau tidak ada/kosong/habis isi 0")
+                    st.caption("Note: Harga Asli, sebelum potongan promo (angka nya saja)")
         
-            if tipe_account_value == "Chain":
-                expired_date = st.date_input(
-                    f"Tanggal Expired Date produk {nama_produk}", 
-                    key="expired_date"
-                )
+                    if "gratis" in jenis_promo.lower():
+                        sisa_stock = st.number_input(
+                            f"Berapa sisa produk {nama_produk} per pcs yang tertera di display?",
+                            min_value=0, key="sisa_stock"
+                        )
+                        st.caption("Note: Kalau tidak ada/kosong/habis isi 0")
         
-                # Mailer hanya untuk Chain
-                st.subheader(f"Informasi Katalog Produk")
-                promo_mailer = st.selectbox(
-                    "Apakah promo tersebut tercantum di mailer / katalog promo? (jika mailer/katalog promo habis/tidak ada, tanyakan & minta di kasir)", 
-                    ["", "Iya", "Tidak", "Tidak Tahu"],
-                    key="promo_mailer"
-                )
-                if promo_mailer == "Tidak Tahu":
-                    keterangan = st.text_input("Keterangan:", key="keterangan")
-                else:
-                    keterangan = st.text_input("Keterangan:", value="-", disabled=True)
+                if tipe_account_value == "Chain":
+                    expired_date = st.date_input(
+                        f"Tanggal Expired Date produk {nama_produk}", 
+                        key="expired_date"
+                    )
         
-        # --- Chain & Lokal ---
-        if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
+                    # Mailer hanya untuk Chain
+                    st.subheader(f"Informasi Katalog Produk")
+                    promo_mailer = st.selectbox(
+                        "Apakah promo tersebut tercantum di mailer / katalog promo? (jika mailer/katalog promo habis/tidak ada, tanyakan & minta di kasir)", 
+                        ["", "Iya", "Tidak", "Tidak Tahu"],
+                        key="promo_mailer"
+                    )
+                    if promo_mailer == "Tidak Tahu":
+                        keterangan = st.text_input("Keterangan:", key="keterangan")
+                    else:
+                        keterangan = st.text_input("Keterangan:", value="-", disabled=True)
+        
+            # --- Chain & Lokal ---
             st.subheader(f"Alasan Material Promo Produk")
             material_promo = st.selectbox(
                 "Apakah material promo (seperti : wobler, price tag atau lainnya) terpasang di rak / pricetag produk yang di promosikan?", 
@@ -253,13 +253,15 @@ with tab1:
                 else:
                     alasan_material = alasan_select
         
-            st.subheader(f"Informasi Tersetting Produk dan Harga di Struk Produk {nama_produk}")
-            promo_di_kasir = st.selectbox(
-                "Apakah promo tersetting di sistem server kasir?", 
-                ["", "Ya", "Tidak"], 
-                key="promo_di_kasir"
-            )
-            info_struk = st.text_input("Informasi potongan harga yang tertera di struk:", key="info_struk")
+            # Muncul hanya jika material promo sudah diisi
+            if material_promo != "":
+                st.subheader(f"Informasi Tersetting Produk dan Harga di Struk Produk {nama_produk}")
+                promo_di_kasir = st.selectbox(
+                    "Apakah promo tersetting di sistem server kasir?", 
+                    ["", "Ya", "Tidak"], 
+                    key="promo_di_kasir"
+                )
+                info_struk = st.text_input("Informasi potongan harga yang tertera di struk:", key="info_struk")
 
 
 #------------------------------------SUBMIT DAN PROSES
