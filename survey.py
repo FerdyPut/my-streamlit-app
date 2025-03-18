@@ -74,23 +74,31 @@ with tab1:
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
 #-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
+        today = datetime.now(ZoneInfo("Asia/Jakarta")).date()
         sheet_url = "https://docs.google.com/spreadsheets/d/1GIfUGSMLfCMiDMy1aFHm_05F1IJXzY3kY89QCceFDOA/export?format=csv"
         df = pd.read_csv(sheet_url)
-        # Data produk per outlet
-        outlet_data = {}
+        # Convert kolom 'Tanggal Survey' ke tipe datetime
+        df['Tanggal Survey'] = pd.to_datetime(df['Tanggal Survey']).dt.date
         
-        for _, row in df.iterrows():
-            outlet = row['Tipe Outlet']
-            if outlet not in outlet_data:
-                outlet_data[outlet] = []
-            outlet_data[outlet].append({
-                "nama_produk": row['Nama Produk'],
-                "jenis_promo": row['Jenis Promo'],
-                "periode_promo": row['Periode Promo']
-            })
+        # Filter hanya yang sesuai tanggal hari ini
+        df_today = df[df['Tanggal Survey'] == today]
         
-        # Dropdown outlet
-        tipe_outlet = st.selectbox("Pilih Outlet:", list(outlet_data.keys()))
+        if df_today.empty:
+            st.warning(f"Tidak ada outlet yang disurvey hari ini ({today})")
+        else:
+            outlet_data = {}
+            for _, row in df_today.iterrows():
+                outlet = row['Tipe Outlet']
+                if outlet not in outlet_data:
+                    outlet_data[outlet] = []
+                outlet_data[outlet].append({
+                    "nama_produk": row['Nama Produk'],
+                    "jenis_promo": row['Jenis Promo'],
+                    "periode_promo": row['Periode Promo']
+                })
+        
+            # Dropdown outlet yg tersedia hari ini saja
+            tipe_outlet = st.selectbox("Pilih Outlet (Hari Ini):", list(outlet_data.keys()))
         
         # Show promo per outlet
         if tipe_outlet:
