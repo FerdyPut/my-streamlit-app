@@ -155,7 +155,7 @@ with tab1:
             tipe_account_value = "Lokal"
         
         # Tampilkan tipe account (disabled)
-        tipe_account = st.selectbox("Tipe Account:", ["Chain", "Lokal"], index=0 if tipe_account_value == "Chain" else 1, disabled=True)
+        tipe_account = st.selectbox("Tipe Account (HCO):", ["Chain", "Lokal"], index=0 if tipe_account_value == "Chain" else 1, disabled=True)
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
         st.caption("Isikan - jika tidak tau")
         
