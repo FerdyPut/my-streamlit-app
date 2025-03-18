@@ -195,23 +195,26 @@ with tab1:
         info_struk = "-"
         
         # --- Chain khusus ---
-        if tipe_account_value == "Chain":
-            if produk_display == "Iya":
+        if produk_display == "Iya":
+            if tipe_account_value == "Chain" or tipe_account_value == "Lokal":
                 harga_produk = st.number_input(
                     f"Berapa harga produk {nama_produk} per pcs yang tertera di rak / server kasir?",
                     min_value=0, key="harga_produk"
                 )
                 st.caption("Note: Harga Asli, sebelum potongan promo (angka nya saja)")
-                expired_date = st.date_input(
-                    f"Tanggal Expired Date produk {nama_produk}", 
-                    key="expired_date"
-                )
+        
                 if "gratis" in jenis_promo.lower():
                     sisa_stock = st.number_input(
                         f"Berapa sisa produk {nama_produk} per pcs yang tertera di display?",
                         min_value=0, key="sisa_stock"
                     )
                     st.caption("Note: Kalau tidak ada/kosong/habis isi 0")
+        
+            if tipe_account_value == "Chain":
+                expired_date = st.date_input(
+                    f"Tanggal Expired Date produk {nama_produk}", 
+                    key="expired_date"
+                )
         
             if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
                 st.subheader(f"Informasi Katalog Produk")
