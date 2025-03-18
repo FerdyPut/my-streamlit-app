@@ -102,15 +102,15 @@ with tab1:
                     st.markdown(f"""
                     <div style='margin-bottom: 12px;'>
                         <span style='background-color: #A5D6A7; color: #2E7D32; padding: 4px 8px; 
-                                     border-radius: 5px; font-size: 90%; margin-right: 5px;'>
+                                     border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
                             {promo['nama_produk']}
                         </span>
                         <span style='background-color: #90CAF9; color: #1565C0; padding: 4px 8px; 
-                                     border-radius: 5px; font-size: 90%; margin-right: 5px;'>
+                                     border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
                             {promo['jenis_promo']}
                         </span>
                         <span style='background-color: #FFCC80; color: #EF6C00; padding: 4px 8px; 
-                                     border-radius: 5px; font-size: 90%;'>
+                                     border-radius: 5px; font-size: 90%; font-weight: bold;'>
                             Periode: {promo['periode_promo']}
                         </span>
                     </div>
