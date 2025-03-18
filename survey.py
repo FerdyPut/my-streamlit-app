@@ -400,11 +400,11 @@ with tab2:
             - **Surveyor** tidak perlu mendownload excel, dan jikalau revisi bisa dilakukan edit data atau delete data.
             """)
             st.markdown(f"""
-            <div style='margin-bottom: 12px;'>
-                Link Spreadsheet untuk Update Data Produk/Promo/Survey: 
+            <div style='margin-bottom: 12px; text-align: center;'>
+                Link Spreadsheet untuk Update Data Produk/Promo/Survey: <br>
                 <a href='https://intip.in/UpdateProdukPromoSurveyHCO' target='_blank' 
                    style='background-color: #626F47; color: #ffffff; padding: 4px 8px; 
-                          border-radius: 5px; font-size: 90%; font-weight: bold; text-decoration: none;'>
+                          border-radius: 5px; font-size: 90%; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 5px;'>
                     https://intip.in/UpdateProdukPromoSurveyHCO
                 </a>
             </div>
