@@ -196,7 +196,7 @@ with tab1:
         
         # --- Chain khusus ---
         if produk_display == "Iya":
-            if tipe_account_value == "Chain" or tipe_account_value == "Lokal":
+            if tipe_account_value in ["Chain", "Lokal"]:
                 harga_produk = st.number_input(
                     f"Berapa harga produk {nama_produk} per pcs yang tertera di rak / server kasir?",
                     min_value=0, key="harga_produk"
@@ -216,7 +216,7 @@ with tab1:
                     key="expired_date"
                 )
         
-            if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
+                # Mailer hanya untuk Chain
                 st.subheader(f"Informasi Katalog Produk")
                 promo_mailer = st.selectbox(
                     "Apakah promo tersebut tercantum di mailer / katalog promo? (jika mailer/katalog promo habis/tidak ada, tanyakan & minta di kasir)", 
@@ -264,100 +264,100 @@ with tab1:
 
 #------------------------------------SUBMIT DAN PROSES
 
-        if st.button("Submit"):
-            errors = []
-        
-            # Validasi field wajib utama
-            if not nama_surveyor or not kode_outlet or not kota:
-                errors.append("Nama Surveyor, Kode Outlet, dan Kota wajib diisi!")
-        
-            # Validasi tambahan jika produk_display sudah dipilih
-            if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
-                if promo_mailer.strip() == "":
-                    errors.append("Promo Mailer wajib diisi.")
-                if promo_mailer == "Tidak Tahu" and keterangan.strip() == "":
-                    errors.append("Keterangan wajib diisi jika memilih 'Tidak Tahu' pada promo mailer.")
-                if material_promo.strip() == "":
-                    errors.append("Material Promo wajib diisi.")
-                if material_promo == "Tidak" and alasan_material.strip() == "":
-                    errors.append("Alasan Material wajib diisi jika material tidak terpasang.")
-                if promo_di_kasir.strip() == "":
-                    errors.append("Promo di server kasir wajib diisi.")
-                if info_struk.strip() == "":
-                    errors.append("Informasi potongan harga di struk wajib diisi.")
-                if produk_display == "Iya":
-                    if harga_produk is None or harga_produk == 0:
-                        errors.append("Harga produk wajib diisi jika produk terdisplay.")
-                    if expired_date is None:
-                        errors.append("Tanggal expired wajib diisi jika produk terdisplay.")
-                    if "gratis" in jenis_promo and (sisa_stock is None):
-                        errors.append("Sisa stock wajib diisi untuk promo yang mengandung 'gratis'.")
-        
-            # Jika ada error, tampilkan semua
-            if errors:
-                for err in errors:
-                    st.error(err)
-            else:
-                # Logic untuk Kode Stock
-                if sisa_stock is not None:
-                    if sisa_stock <= 3:
-                        kode_stock = 1
+            if st.button("Submit"):
+                errors = []
+            
+                # Validasi field wajib utama
+                if not nama_surveyor or not kode_outlet or not kota:
+                    errors.append("Nama Surveyor, Kode Outlet, dan Kota wajib diisi!")
+            
+                # Validasi tambahan jika produk_display sudah dipilih
+                if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
+                    if promo_mailer.strip() == "":
+                        errors.append("Promo Mailer wajib diisi.")
+                    if promo_mailer == "Tidak Tahu" and keterangan.strip() == "":
+                        errors.append("Keterangan wajib diisi jika memilih 'Tidak Tahu' pada promo mailer.")
+                    if material_promo.strip() == "":
+                        errors.append("Material Promo wajib diisi.")
+                    if material_promo == "Tidak" and alasan_material.strip() == "":
+                        errors.append("Alasan Material wajib diisi jika material tidak terpasang.")
+                    if promo_di_kasir.strip() == "":
+                        errors.append("Promo di server kasir wajib diisi.")
+                    if info_struk.strip() == "":
+                        errors.append("Informasi potongan harga di struk wajib diisi.")
+                    if produk_display == "Iya":
+                        if harga_produk is None or harga_produk == 0:
+                            errors.append("Harga produk wajib diisi jika produk terdisplay.")
+                        if expired_date is None:
+                            errors.append("Tanggal expired wajib diisi jika produk terdisplay.")
+                        if "gratis" in jenis_promo and (sisa_stock is None):
+                            errors.append("Sisa stock wajib diisi untuk promo yang mengandung 'gratis'.")
+            
+                # Jika ada error, tampilkan semua
+                if errors:
+                    for err in errors:
+                        st.error(err)
+                else:
+                    # Logic untuk Kode Stock
+                    if sisa_stock is not None:
+                        if sisa_stock <= 3:
+                            kode_stock = 1
+                        else:
+                            kode_stock = 2
                     else:
-                        kode_stock = 2
-                else:
-                    kode_stock = "-"
-                new_data = {
-                    "Timestamp Pengisian" : datetime.now(ZoneInfo('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S'),
-                    "Tipe Outlet": tipe_outlet,
-                    "Tipe Account": tipe_account,
-                    "Bulan": bulan,
-                    "Tahun": tahun,
-                    "Nama Produk": nama_produk,
-                    "Periode Promo": periode_promo,
-                    "Jenis Promo": produk_terpilih.get("jenis_promo", ""),
-                    "Periode Survey": "-",  # Kosong dulu
-                    "Kota": kota,
-                    "Kode Outlet": kode_outlet,
-                    "Alamat": alamat_outlet,
-                    "Nama Surveyor": nama_surveyor,
-                    "Tanggal Kunjugan": tanggal.strftime('%Y-%m-%d'),
-                    "Jam Kunjungan": jam_final.strftime('%H:%M'),
-                    "Produk Display": produk_display,
-                    "Promo Mailer": promo_mailer,
-                    "Keterangan Mailer": keterangan,
-                    "Material Promo": material_promo,
-                    "Kode Material": "-",  # Kosong dulu
-                    "Alasan Material Tidak Terpasang": alasan_material,
-                    "Promo Tersetting di Server Kasir": promo_di_kasir,
-                    "Sisa Stock": sisa_stock,
-                    "Kode Stock": kode_stock,  # Kosong dulu
-                    "Informasi Potongan Harga di Struk": info_struk,
-                    "Expired Date": expired_date.strftime('%Y-%m-%d') if expired_date else "-",
-                    "Harga Produk": harga_produk
-                }
-
-                if os.path.exists(file_path):
-                    df_existing = pd.read_excel(file_path, engine="openpyxl")
-                else:
-                    df_existing = pd.DataFrame()
-
-                order = [
-                    "Timestamp Pengisian","Tipe Outlet", "Tipe Account",  "Tahun", "Bulan", "Periode Promo",  "Nama Produk", "Jenis Promo", 
-                    "Periode Survey", "Kota","Nama Surveyor", "Tanggal Kunjugan", 
-                    "Jam Kunjungan",  "Kode Outlet", "Alamat", "Produk Display", "Promo Mailer", "Keterangan Mailer", "Material Promo", 
-                    "Kode Material", "Alasan Material Tidak Terpasang", "Promo Tersetting di Server Kasir", 
-                    "Sisa Stock", "Kode Stock", "Informasi Potongan Harga di Struk", "Expired Date", "Harga Produk"
-                ]
-
-                df_new = pd.DataFrame([new_data])
-                df_existing = pd.concat([df_existing, df_new], ignore_index=True)
-                df_existing = df_existing.fillna("-")
-                df_existing = df_existing[order]  # <-- Reorder kolom di sini
-                df_existing.to_excel(file_path, index=False, engine='openpyxl')
-                import time
-
-                st.success("Data Sudah Tersimpan!")
-                st.info("Jikalau mau menginput data lagi silahkan refresh website!")   
+                        kode_stock = "-"
+                    new_data = {
+                        "Timestamp Pengisian" : datetime.now(ZoneInfo('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S'),
+                        "Tipe Outlet": tipe_outlet,
+                        "Tipe Account": tipe_account,
+                        "Bulan": bulan,
+                        "Tahun": tahun,
+                        "Nama Produk": nama_produk,
+                        "Periode Promo": periode_promo,
+                        "Jenis Promo": produk_terpilih.get("jenis_promo", ""),
+                        "Periode Survey": "-",  # Kosong dulu
+                        "Kota": kota,
+                        "Kode Outlet": kode_outlet,
+                        "Alamat": alamat_outlet,
+                        "Nama Surveyor": nama_surveyor,
+                        "Tanggal Kunjugan": tanggal.strftime('%Y-%m-%d'),
+                        "Jam Kunjungan": jam_final.strftime('%H:%M'),
+                        "Produk Display": produk_display,
+                        "Promo Mailer": promo_mailer,
+                        "Keterangan Mailer": keterangan,
+                        "Material Promo": material_promo,
+                        "Kode Material": "-",  # Kosong dulu
+                        "Alasan Material Tidak Terpasang": alasan_material,
+                        "Promo Tersetting di Server Kasir": promo_di_kasir,
+                        "Sisa Stock": sisa_stock,
+                        "Kode Stock": kode_stock,  # Kosong dulu
+                        "Informasi Potongan Harga di Struk": info_struk,
+                        "Expired Date": expired_date.strftime('%Y-%m-%d') if expired_date else "-",
+                        "Harga Produk": harga_produk
+                    }
+    
+                    if os.path.exists(file_path):
+                        df_existing = pd.read_excel(file_path, engine="openpyxl")
+                    else:
+                        df_existing = pd.DataFrame()
+    
+                    order = [
+                        "Timestamp Pengisian","Tipe Outlet", "Tipe Account",  "Tahun", "Bulan", "Periode Promo",  "Nama Produk", "Jenis Promo", 
+                        "Periode Survey", "Kota","Nama Surveyor", "Tanggal Kunjugan", 
+                        "Jam Kunjungan",  "Kode Outlet", "Alamat", "Produk Display", "Promo Mailer", "Keterangan Mailer", "Material Promo", 
+                        "Kode Material", "Alasan Material Tidak Terpasang", "Promo Tersetting di Server Kasir", 
+                        "Sisa Stock", "Kode Stock", "Informasi Potongan Harga di Struk", "Expired Date", "Harga Produk"
+                    ]
+    
+                    df_new = pd.DataFrame([new_data])
+                    df_existing = pd.concat([df_existing, df_new], ignore_index=True)
+                    df_existing = df_existing.fillna("-")
+                    df_existing = df_existing[order]  # <-- Reorder kolom di sini
+                    df_existing.to_excel(file_path, index=False, engine='openpyxl')
+                    import time
+    
+                    st.success("Data Sudah Tersimpan!")
+                    st.info("Jikalau mau menginput data lagi silahkan refresh website!")   
 with tab2:
     if "admin_login" not in st.session_state:
         st.session_state.admin_login = False
