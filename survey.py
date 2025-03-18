@@ -99,7 +99,13 @@ with tab1:
             if tipe_outlet:
                 st.write(f"Promo di {tipe_outlet}:")
                 for promo in outlet_data[tipe_outlet]:
-                    st.write(f"- **{promo['nama_produk']}**: {promo['jenis_promo']} (Periode: {promo['periode_promo']})")
+                    st.markdown(f"""
+                    - **{promo['nama_produk']}**: {promo['jenis_promo']} 
+                      <span style='background-color: #e0e0e0; color: #333; padding: 4px 8px; border-radius: 5px; font-size: 90%;'>
+                        Periode Promo: {promo['periode_promo']}
+                      </span>
+                    """, unsafe_allow_html=True)
+
                 
                 produk_list = outlet_data.get(tipe_outlet, [])
                 produk_names = [p["nama_produk"] for p in produk_list]
