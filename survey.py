@@ -400,13 +400,15 @@ with tab2:
             - **Surveyor** tidak perlu mendownload excel, dan jikalau revisi bisa dilakukan edit data atau delete data.
             """)
             st.markdown(f"""
-<div style='margin-bottom: 12px;'>
-    <span style='background-color: #626F47; color: #000000; padding: 4px 8px; 
-                 border-radius: 5px; font-size: 90%; font-weight: bold;'>
-        Link Spreadsheet untuk Update Data Produk/Promo/Survey: https://intip.in/UpdateProdukPromoSurveyHCO }
-    </span>
-</div>
-""", unsafe_allow_html=True)
+            <div style='margin-bottom: 12px;'>
+                Link Spreadsheet untuk Update Data Produk/Promo/Survey: 
+                <a href='https://intip.in/UpdateProdukPromoSurveyHCO' target='_blank' 
+                   style='background-color: #626F47; color: #ffffff; padding: 4px 8px; 
+                          border-radius: 5px; font-size: 90%; font-weight: bold; text-decoration: none;'>
+                    https://intip.in/UpdateProdukPromoSurveyHCO
+                </a>
+            </div>
+            """, unsafe_allow_html=True)
             
             st.header("Hasil Inputan Data Survey Promo HCO Chain")
             if os.path.exists(file_path):
