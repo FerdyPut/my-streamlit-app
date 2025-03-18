@@ -313,10 +313,10 @@ with tab1:
                     else:
                         kode_stock = "-"
         
-                    # Normalisasi data sebelum export
-                    export_expired = expired_date.strftime('%Y-%m-%d') if isinstance(expired_date, date) else "-"
-                    export_harga = harga_produk if isinstance(harga_produk, int) else "-"
-                    export_sisa_stock = sisa_stock if isinstance(sisa_stock, int) else "-"
+                    if isinstance(expired_date, (datetime, date)):
+                        export_expired = expired_date.strftime('%Y-%m-%d')
+                    else:
+                        export_expired = "-"
         
                     # Data dict
                     new_data = {
