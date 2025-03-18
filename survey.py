@@ -101,19 +101,19 @@ with tab1:
                 for i, promo in enumerate(outlet_data[tipe_outlet], start=1):
                     st.markdown(f"""
                     <div style='margin-bottom: 12px;'>
-                        <span style='background-color: #00000; color: #4527A0; padding: 4px 8px; 
+                        <span style='background-color: #000000; color: #FFFFFF; padding: 4px 8px; 
                                      border-radius: 5px; font-size: 90%; margin-right: 8px; font-weight: bold;'>
                             {i}.
                         </span>
-                        <span style='background-color: #89AC46; color: #2E7D32; padding: 4px 8px; 
+                        <span style='background-color: #89AC46; color: #000000; padding: 4px 8px; 
                                      border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
                             {promo['nama_produk']}
                         </span>
-                        <span style='background-color: #E50046; color: #1565C0; padding: 4px 8px; 
+                        <span style='background-color: #E50046; color: #000000; padding: 4px 8px; 
                                      border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
                             {promo['jenis_promo']}
                         </span>
-                        <span style='background-color: #626F47; color: #EF6C00; padding: 4px 8px; 
+                        <span style='background-color: #626F47; color: #000000; padding: 4px 8px; 
                                      border-radius: 5px; font-size: 90%; font-weight: bold;'>
                             Periode: {promo['periode_promo']}
                         </span>
