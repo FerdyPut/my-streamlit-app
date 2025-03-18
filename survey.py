@@ -74,7 +74,7 @@ with tab1:
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
 #-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
-        today = datetime.now(ZoneInfo("Asia/Jakarta")).date()
+          today = datetime.now(ZoneInfo("Asia/Jakarta")).date()
         sheet_url = "https://docs.google.com/spreadsheets/d/1GIfUGSMLfCMiDMy1aFHm_05F1IJXzY3kY89QCceFDOA/export?format=csv"
         df = pd.read_csv(sheet_url)
         df['Tanggal Survey'] = pd.to_datetime(df['Tanggal Survey']).dt.date
@@ -95,9 +95,8 @@ with tab1:
                     "periode_promo": row['Periode Promo']
                 })
         
-            # Dropdown outlet hari ini
             tipe_outlet = st.selectbox("Pilih Outlet (Hari Ini):", list(outlet_data.keys()))
-            
+        
             if tipe_outlet:
                 st.write(f"Promo di {tipe_outlet}:")
                 for promo in outlet_data[tipe_outlet]:
