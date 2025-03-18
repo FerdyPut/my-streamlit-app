@@ -174,7 +174,8 @@ with tab1:
             "Pekanbaru", "Pontianak"
         ],key="kota")
         alamat_outlet = st.text_input("Alamat Outlet:",key="alamat_outlet")
-    #---------------------------------------------------------------DISPLAY PRODUK
+        
+   #---------------------------------------------------------------DISPLAY PRODUK
         st.subheader(f"Detail Produk")
         produk_display = st.selectbox(
             f"Apakah produk {nama_produk} terdisplay di toko?", 
@@ -193,8 +194,7 @@ with tab1:
         promo_di_kasir = "-"
         info_struk = "-"
         
-        # ------------------------------------------------
-        # Logic khusus untuk tipe_account_value
+        # --- Chain khusus ---
         if tipe_account_value == "Chain":
             if produk_display == "Iya":
                 harga_produk = st.number_input(
@@ -213,7 +213,6 @@ with tab1:
                     )
                     st.caption("Note: Kalau tidak ada/kosong/habis isi 0")
         
-            # Mailer khusus Chain
             if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
                 st.subheader(f"Informasi Katalog Produk")
                 promo_mailer = st.selectbox(
@@ -226,8 +225,7 @@ with tab1:
                 else:
                     keterangan = st.text_input("Keterangan:", value="-", disabled=True)
         
-        # ------------------------------------------------
-        # Pertanyaan yang berlaku untuk semua tipe (Chain & Lokal)
+        # --- Chain & Lokal ---
         if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
             st.subheader(f"Alasan Material Promo Produk")
             material_promo = st.selectbox(
@@ -259,6 +257,9 @@ with tab1:
                 key="promo_di_kasir"
             )
             info_struk = st.text_input("Informasi potongan harga yang tertera di struk:", key="info_struk")
+
+
+#------------------------------------SUBMIT DAN PROSES
 
                 if st.button("Submit"):
                     errors = []
