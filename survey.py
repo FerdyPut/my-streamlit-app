@@ -77,10 +77,8 @@ with tab1:
         today = datetime.now(ZoneInfo("Asia/Jakarta")).date()
         sheet_url = "https://docs.google.com/spreadsheets/d/1GIfUGSMLfCMiDMy1aFHm_05F1IJXzY3kY89QCceFDOA/export?format=csv"
         df = pd.read_csv(sheet_url)
-        # Convert kolom 'Tanggal Survey' ke tipe datetime
         df['Tanggal Survey'] = pd.to_datetime(df['Tanggal Survey']).dt.date
         
-        # Filter hanya yang sesuai tanggal hari ini
         df_today = df[df['Tanggal Survey'] == today]
         
         if df_today.empty:
@@ -97,32 +95,24 @@ with tab1:
                     "periode_promo": row['Periode Promo']
                 })
         
-            # Dropdown outlet yg tersedia hari ini saja
+            # Dropdown outlet hari ini
             tipe_outlet = st.selectbox("Pilih Outlet (Hari Ini):", list(outlet_data.keys()))
-        
-        # Show promo per outlet
-        if tipe_outlet:
-            st.write(f"Promo di {tipe_outlet}:")
-            for promo in outlet_data[tipe_outlet]:
-                st.write(f"- **{promo['nama_produk']}**: {promo['jenis_promo']} (Periode: {promo['periode_promo']})")
-        
-        # Tampilkan produk yang sesuai outlet
-        produk_list = outlet_data.get(tipe_outlet, [])
-        produk_names = [p["nama_produk"] for p in produk_list]
-        
-        if produk_list:
-            # Pilih produk berdasarkan outlet
-            nama_produk = st.selectbox("Nama Produk:", produk_names, key="nama_produk")
             
-            # Ambil detail promo & periode
-            produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
-            
-            # Ambil periode promo
-            periode_promo = produk_terpilih.get("periode_promo", "")
-            
-            # Tampilkan informasi promo dan periode
-            st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
-            st.text_input("Periode Promo:", value=periode_promo, disabled=True)
+            if tipe_outlet:
+                st.write(f"Promo di {tipe_outlet}:")
+                for promo in outlet_data[tipe_outlet]:
+                    st.write(f"- **{promo['nama_produk']}**: {promo['jenis_promo']} (Periode: {promo['periode_promo']})")
+                
+                produk_list = outlet_data.get(tipe_outlet, [])
+                produk_names = [p["nama_produk"] for p in produk_list]
+        
+                if produk_list:
+                    nama_produk = st.selectbox("Nama Produk:", produk_names, key="nama_produk")
+                    produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
+                    periode_promo = produk_terpilih.get("periode_promo", "")
+        
+                    st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
+                    st.text_input("Periode Promo:", value=periode_promo, disabled=True)
             
             # Cek apakah jenis_promo mengandung kata 'gratis'
             jenis_promo = produk_terpilih.get("jenis_promo", "").lower()
