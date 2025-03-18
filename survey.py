@@ -320,9 +320,9 @@ with tab1:
                             df_existing = pd.DataFrame()
 
                         order = [
-                            "Timestamp Pengisian","Tipe Outlet", "Tipe Account", "Bulan", "Tahun", "Nama Produk", "Periode Promo", "Jenis Promo", 
-                            "Periode Survey", "Kota", "Kode Outlet", "Alamat", "Nama Surveyor", "Tanggal Kunjugan", 
-                            "Jam Kunjungan", "Produk Display", "Promo Mailer", "Keterangan Mailer", "Material Promo", 
+                            "Timestamp Pengisian","Tipe Outlet", "Tipe Account",  "Tahun", "Bulan", "Periode Promo",  "Nama Produk", "Jenis Promo", 
+                            "Periode Survey", "Kota","Nama Surveyor", "Tanggal Kunjugan", 
+                            "Jam Kunjungan",  "Kode Outlet", "Alamat", "Produk Display", "Promo Mailer", "Keterangan Mailer", "Material Promo", 
                             "Kode Material", "Alasan Material Tidak Terpasang", "Promo Tersetting di Server Kasir", 
                             "Sisa Stock", "Kode Stock", "Informasi Potongan Harga di Struk", "Expired Date", "Harga Produk"
                         ]
