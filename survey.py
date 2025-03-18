@@ -8,7 +8,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from datetime import datetime, date
 import pytz
-st.set_page_config(page_title="Form Survey Promo HCO Chain dan Lokal - Siantar Top - BSI ", page_icon=":bookmark_tabs:", layout="centered")
+st.set_page_config(page_title="Form Survey Promo HCO Chain dan Lokal - Siantar Top - BSI ", page_icon=":bookmark_tabs:", layout="centered",initial_sidebar_state = "expanded")
 st.title("Form Survey Promo HCO Chain dan Lokal Tahun 2025")
 background_url = "https://upload.wikimedia.org/wikipedia/commons/c/cc/Logo_Siantar_Top.svg"
 
