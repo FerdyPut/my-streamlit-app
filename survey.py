@@ -74,13 +74,6 @@ with tab1:
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
 #-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
-        today = datetime.now(ZoneInfo("Asia/Jakarta")).date()
-        sheet_url = "https://docs.google.com/spreadsheets/d/1GIfUGSMLfCMiDMy1aFHm_05F1IJXzY3kY89QCceFDOA/export?format=csv"
-        df = pd.read_csv(sheet_url)
-        df['Tanggal Survey'] = pd.to_datetime(df['Tanggal Survey']).dt.date
-        
-        df_today = df[df['Tanggal Survey'] == today]
-        
         if df_today.empty:
             st.warning(f"Tidak ada outlet yang disurvey hari ini ({today})")
         else:
@@ -112,15 +105,15 @@ with tab1:
         
                     st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
                     st.text_input("Periode Promo:", value=periode_promo, disabled=True)
-            
-            # Cek apakah jenis_promo mengandung kata 'gratis'
-            jenis_promo = produk_terpilih.get("jenis_promo", "").lower()
-            if "gratis" in jenis_promo:
-                st.text("Promo mengandung kata 'gratis'")
-            else:
-                st.text("Promo tidak mengandung kata 'gratis'")
-        else:
-            st.info("Belum ada produk untuk outlet ini.")
+                    
+                    # Cek apakah jenis_promo mengandung kata 'gratis'
+                    jenis_promo = produk_terpilih.get("jenis_promo", "").lower()
+                    if "gratis" in jenis_promo:
+                        st.text("Promo mengandung kata 'gratis'")
+                    else:
+                        st.text("Promo tidak mengandung kata 'gratis'")
+                else:
+                    st.info("Belum ada produk untuk outlet ini.")
 
 
         tipe_account = st.selectbox("Tipe Account:", ["Chain"], index=0, disabled=True)
