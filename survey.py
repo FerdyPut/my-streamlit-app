@@ -219,56 +219,67 @@ with tab1:
                     key="expired_date"
                 )
         
-            # Step 2 - Informasi katalog hanya Chain
-            if tipe_account_value == "Chain":
-                st.subheader(f"Informasi Katalog Produk")
-                promo_mailer = st.selectbox(
-                    "Apakah promo tersebut tercantum di mailer / katalog promo? (jika mailer/katalog promo habis/tidak ada, tanyakan & minta di kasir)", 
-                    ["", "Iya", "Tidak", "Tidak Tahu"],
-                    key="promo_mailer"
-                )
-                if promo_mailer == "Tidak Tahu":
-                    keterangan = st.text_input("Keterangan:", key="keterangan")
-                elif promo_mailer in ["Iya", "Tidak"]:
-                    keterangan = st.text_input("Keterangan:", value="-", disabled=True)
+            # Step 2 - Informasi katalog hanya muncul setelah expired / harga terisi
+            lanjut_katalog = False
+            if tipe_account_value == "Chain" and produk_display in ["Iya"]:
+                lanjut_katalog = True
+            elif tipe_account_value != "Chain":
+                lanjut_katalog = True
         
-            # Step 3 - Setelah katalog terisi, lanjut ke material promo
-            if tipe_account_value != "Chain" or promo_mailer.strip() != "":
-                st.subheader(f"Alasan Material Promo Produk")
-                material_promo = st.selectbox(
-                    "Apakah material promo (seperti : wobler, price tag atau lainnya) terpasang di rak / pricetag produk yang di promosikan?", 
-                    ["", "Ya", "Tidak"], 
-                    key="material_promo"
-                )
-        
-                # Step 4 - Alasan material jika jawab "Tidak"
-                if material_promo == "Tidak":
-                    alasan_material_list = [
-                        "Distribusi/pengiriman material promo (seperti : wobler, atau lainnya) belum sampai ke toko",
-                        "Material promo (seperti : wobler, atau lainnya) sudah sampai di toko, namun belum terpasang oleh pihak toko",
-                        "Outlet tidak menjual produk tersebut",
-                        "Lainnya (Isi sendiri)"
-                    ]
-                    alasan_select = st.selectbox(
-                        "Kenapa material promo tidak terpasang di rak / pricetag produk yang di promosikan?",
-                        alasan_material_list, key="alasan_select"
+            if lanjut_katalog:
+                # --- Step 2: Katalog ---
+                if tipe_account_value == "Chain":
+                    st.subheader(f"Informasi Katalog Produk")
+                    promo_mailer = st.selectbox(
+                        "Apakah promo tersebut tercantum di mailer / katalog promo? (jika mailer/katalog promo habis/tidak ada, tanyakan & minta di kasir)", 
+                        ["", "Iya", "Tidak", "Tidak Tahu"],
+                        key="promo_mailer"
                     )
-                    if alasan_select == "Lainnya (Isi sendiri)":
-                        alasan_material = st.text_input("Silakan isi alasan lainnya:", key="alasan_material")
-                    else:
-                        alasan_material = alasan_select
-                elif material_promo == "Ya":
-                    alasan_material = "-"
+                    if promo_mailer == "Tidak Tahu":
+                        keterangan = st.text_input("Keterangan:", key="keterangan")
+                    elif promo_mailer in ["Iya", "Tidak"]:
+                        keterangan = st.text_input("Keterangan:", value="-", disabled=True)
+                else:
+                    promo_mailer = "-"
+                    keterangan = "-"
         
-            # Step 5 - Struk baru muncul setelah material promo terisi
-            if material_promo != "":
-                st.subheader(f"Informasi Tersetting Produk dan Harga di Struk Produk {nama_produk}")
-                promo_di_kasir = st.selectbox(
-                    "Apakah promo tersetting di sistem server kasir?", 
-                    ["", "Ya", "Tidak"], 
-                    key="promo_di_kasir"
-                )
-                info_struk = st.text_input("Informasi potongan harga yang tertera di struk:", key="info_struk")
+                # Step 3 - Material Promo muncul hanya jika katalog sudah terisi
+                if tipe_account_value != "Chain" or promo_mailer.strip() != "":
+                    st.subheader(f"Alasan Material Promo Produk")
+                    material_promo = st.selectbox(
+                        "Apakah material promo (seperti : wobler, price tag atau lainnya) terpasang di rak / pricetag produk yang di promosikan?", 
+                        ["", "Ya", "Tidak"], 
+                        key="material_promo"
+                    )
+        
+                    # Step 4 - Alasan material jika jawab "Tidak"
+                    if material_promo == "Tidak":
+                        alasan_material_list = [
+                            "Distribusi/pengiriman material promo (seperti : wobler, atau lainnya) belum sampai ke toko",
+                            "Material promo (seperti : wobler, atau lainnya) sudah sampai di toko, namun belum terpasang oleh pihak toko",
+                            "Outlet tidak menjual produk tersebut",
+                            "Lainnya (Isi sendiri)"
+                        ]
+                        alasan_select = st.selectbox(
+                            "Kenapa material promo tidak terpasang di rak / pricetag produk yang di promosikan?",
+                            alasan_material_list, key="alasan_select"
+                        )
+                        if alasan_select == "Lainnya (Isi sendiri)":
+                            alasan_material = st.text_input("Silakan isi alasan lainnya:", key="alasan_material")
+                        else:
+                            alasan_material = alasan_select
+                    elif material_promo == "Ya":
+                        alasan_material = "-"
+        
+                    # Step 5 - Struk baru muncul setelah material promo terisi
+                    if material_promo != "":
+                        st.subheader(f"Informasi Tersetting Produk dan Harga di Struk Produk {nama_produk}")
+                        promo_di_kasir = st.selectbox(
+                            "Apakah promo tersetting di sistem server kasir?", 
+                            ["", "Ya", "Tidak"], 
+                            key="promo_di_kasir"
+                        )
+                        info_struk = st.text_input("Informasi potongan harga yang tertera di struk:", key="info_struk")
 
 #------------------------------------SUBMIT DAN PROSES
 
