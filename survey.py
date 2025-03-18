@@ -273,7 +273,7 @@ with tab1:
                     )
                     info_struk = st.text_input("Informasi potongan harga yang tertera di struk:", key="info_struk")
         
-        #------------------------------------SUBMIT DAN PROSES
+        #---A--------------------------------SUBMIT DAN PROSES
         
             if st.button("Submit"):
                 errors = []
@@ -282,7 +282,13 @@ with tab1:
                 if not nama_surveyor or not kode_outlet or not kota:
                     errors.append("Nama Surveyor, Kode Outlet, dan Kota wajib diisi!")
         
-                # Validasi tambahan jika produk_display sudah dipilih
+                # --- Set default jika Stock Kosong atau Tidak Jual
+                if produk_display in ["Stock Kosong", "Tidak Jual"]:
+                    harga_produk = "-"
+                    expired_date = "-"
+                    sisa_stock = "-"
+                
+                # --- Validasi Step Lainnya
                 if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
                     if promo_mailer.strip() == "":
                         errors.append("Promo Mailer wajib diisi.")
@@ -296,6 +302,8 @@ with tab1:
                         errors.append("Promo di server kasir wajib diisi.")
                     if info_struk.strip() == "":
                         errors.append("Informasi potongan harga di struk wajib diisi.")
+        
+                    # Validasi tambahan hanya jika produk_display == "Iya"
                     if produk_display == "Iya":
                         if harga_produk is None or harga_produk == 0:
                             errors.append("Harga produk wajib diisi jika produk terdisplay.")
@@ -309,14 +317,15 @@ with tab1:
                     for err in errors:
                         st.error(err)
                 else:
-                    # Logic untuk Kode Stock
-                    if sisa_stock is not None and isinstance(sisa_stock, int):
+                    # Logic kode_stock (optional bisa sesuaikan lagi)
+                    if sisa_stock != "-" and isinstance(sisa_stock, int):
                         if sisa_stock <= 3:
                             kode_stock = 1
                         else:
                             kode_stock = 2
                     else:
                         kode_stock = "-"
+
 
                     new_data = {
                         "Timestamp Pengisian" : datetime.now(ZoneInfo('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S'),
