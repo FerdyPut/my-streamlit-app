@@ -319,7 +319,10 @@ with tab1:
                         export_expired = expired_date.strftime('%Y-%m-%d')
                     else:
                         export_expired = "-"
-        
+                    
+                    export_expired = expired_date.strftime('%Y-%m-%d') if isinstance(expired_date, (datetime, date)) else "-"
+                    export_sisa_stock = sisa_stock if isinstance(sisa_stock, int) else "-"
+                    export_harga = harga_produk if isinstance(harga_produk, int) else "-"
                     # Data dict
                     new_data = {
                         "Timestamp Pengisian" : datetime.now(ZoneInfo('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S'),
