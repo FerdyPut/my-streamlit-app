@@ -390,7 +390,6 @@ with tab2:
             else:
                 st.error("Password salah, coba lagi.")
     else:
-            st.header("Hasil Inputan Data Survey Promo HCO Chain")
             st.markdown("""
             **Petunjuk Penggunaan:**
             - Data survey yang sudah diinput akan tampil di bawah ini dan dapat langsung diedit.
@@ -400,8 +399,16 @@ with tab2:
             - Klik **Download Excel** untuk mengunduh data dalam format Excel.
             - **Surveyor** tidak perlu mendownload excel, dan jikalau revisi bisa dilakukan edit data atau delete data.
             """)
-            st.markdown(" Link Spreadsheet untuk Update Data Produk/Promo/Survey: https://intip.in/UpdateProdukPromoSurveyHCO ")
+            st.markdown(f"""
+<div style='margin-bottom: 12px;'>
+    <span style='background-color: #626F47; color: #000000; padding: 4px 8px; 
+                 border-radius: 5px; font-size: 90%; font-weight: bold;'>
+        Link Spreadsheet untuk Update Data Produk/Promo/Survey: https://intip.in/UpdateProdukPromoSurveyHCO }
+    </span>
+</div>
+""", unsafe_allow_html=True)
             
+            st.header("Hasil Inputan Data Survey Promo HCO Chain")
             if os.path.exists(file_path):
                 df_existing = pd.read_excel(file_path, engine='openpyxl')
         
