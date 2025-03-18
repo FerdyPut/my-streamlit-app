@@ -100,10 +100,27 @@ with tab1:
                 st.write(f"Promo di {tipe_outlet}:")
                 for promo in outlet_data[tipe_outlet]:
                     st.markdown(f"""
-                    - **{promo['nama_produk']}**: {promo['jenis_promo']} 
-                      <span style='background-color: #e0e0e0; color: #333; padding: 4px 8px; border-radius: 5px; font-size: 90%;'>
-                        Periode Promo: {promo['periode_promo']}
-                      </span>
+                    <div style='margin-bottom: 12px; padding: 12px; border-radius: 10px; background-color: #ffffff; 
+                                box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                        <div style='margin-bottom: 8px;'>
+                            <span style='background-color: #A5D6A7; color: #2E7D32; padding: 6px 10px; 
+                                         border-radius: 6px; font-size: 90%; font-weight: bold;'>
+                                {promo['nama_produk']}
+                            </span>
+                        </div>
+                        <div style='margin-bottom: 8px;'>
+                            <span style='background-color: #90CAF9; color: #1565C0; padding: 6px 10px; 
+                                         border-radius: 6px; font-size: 90%; font-weight: bold;'>
+                                {promo['jenis_promo']}
+                            </span>
+                        </div>
+                        <div>
+                            <span style='background-color: #FFCC80; color: #EF6C00; padding: 6px 10px; 
+                                         border-radius: 6px; font-size: 90%; font-weight: bold;'>
+                                Periode Promo: {promo['periode_promo']}
+                            </span>
+                        </div>
+                    </div>
                     """, unsafe_allow_html=True)
 
                 
