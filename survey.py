@@ -74,6 +74,12 @@ with tab1:
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
 #-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
+        today = datetime.now(ZoneInfo("Asia/Jakarta")).date()
+        sheet_url = "https://docs.google.com/spreadsheets/d/1GIfUGSMLfCMiDMy1aFHm_05F1IJXzY3kY89QCceFDOA/export?format=csv"
+        df = pd.read_csv(sheet_url)
+        df['Tanggal Survey'] = pd.to_datetime(df['Tanggal Survey']).dt.date
+        
+        df_today = df[df['Tanggal Survey'] == today]
         if df_today.empty:
             st.warning(f"Tidak ada outlet yang disurvey hari ini ({today})")
         else:
