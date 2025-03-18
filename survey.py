@@ -98,9 +98,13 @@ with tab1:
         
             if tipe_outlet:
                 st.write(f"Promo di {tipe_outlet}:")
-                for promo in outlet_data[tipe_outlet]:
+                for i, promo in enumerate(outlet_data[tipe_outlet], start=1):
                     st.markdown(f"""
                     <div style='margin-bottom: 12px;'>
+                        <span style='background-color: #B39DDB; color: #4527A0; padding: 4px 8px; 
+                                     border-radius: 5px; font-size: 90%; margin-right: 8px; font-weight: bold;'>
+                            {i}.
+                        </span>
                         <span style='background-color: #A5D6A7; color: #2E7D32; padding: 4px 8px; 
                                      border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
                             {promo['nama_produk']}
