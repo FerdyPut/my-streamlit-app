@@ -74,32 +74,29 @@ with tab1:
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
 #-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
+        sheet_url = "https://docs.google.com/spreadsheets/d/1GIfUGSMLfCMiDMy1aFHm_05F1IJXzY3kY89QCceFDOA/export?format=csv"
+        df = pd.read_csv(sheet_url)
         # Data produk per outlet
-        outlet_data = {
-            "Indomaret": [
-                {
-                    "nama_produk": "Goriorio Vanilla 23 Gr",
-                    "jenis_promo": "Beli 1 pcs, gratis 1 pcs",
-                    "periode_promo": "1 - 5 April 2025"
-                }
-            ],
-            "Alfamart": [
-                {
-                    "nama_produk": "French Fries 192 Gr",
-                    "jenis_promo": "Beli 1 pcs, potongan Rp. 200",
-                    "periode_promo": "5 - 9 April 2025"
-                },
-                {
-                    "nama_produk": "Goriorio Vanilla 23 Gr",
-                    "jenis_promo": "Beli 2 pcs, gratis 1 pcs",
-                    "periode_promo": "6 - 10 April 2025"
-                }
-            ],
-            # Tambah outlet dan produk lain di sini
-        }
+        outlet_data = {}
         
-        # Pilih outlet
+        for _, row in df.iterrows():
+            outlet = row['Tipe Outlet']
+            if outlet not in outlet_data:
+                outlet_data[outlet] = []
+            outlet_data[outlet].append({
+                "nama_produk": row['Nama Produk'],
+                "jenis_promo": row['Jenis Promo'],
+                "periode_promo": row['Periode Promo']
+            })
+        
+        # Dropdown outlet
         tipe_outlet = st.selectbox("Pilih Outlet:", list(outlet_data.keys()))
+        
+        # Show promo per outlet
+        if tipe_outlet:
+            st.write(f"Promo di {tipe_outlet}:")
+            for promo in outlet_data[tipe_outlet]:
+                st.write(f"- **{promo['nama_produk']}**: {promo['jenis_promo']} (Periode: {promo['periode_promo']})")
         
         # Tampilkan produk yang sesuai outlet
         produk_list = outlet_data.get(tipe_outlet, [])
