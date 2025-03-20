@@ -282,10 +282,14 @@ with tab1:
         
                 # --- Validasi Step Lainnya
                 if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
-                    if promo_mailer.strip() == "":
-                        errors.append("Promo Mailer wajib diisi.")
-                    if promo_mailer == "Tidak Tahu" and keterangan.strip() == "":
-                        errors.append("Keterangan wajib diisi jika memilih 'Tidak Tahu' pada promo mailer.")
+                    # Field yang hanya wajib untuk Chain
+                    if tipe_account_value == "Chain":
+                        if promo_mailer.strip() == "":
+                            errors.append("Promo Mailer wajib diisi untuk account Chain.")
+                        if expired_date is None:
+                            errors.append("Tanggal expired wajib diisi untuk account Chain jika produk terdisplay.")
+                    
+                    # Field yang wajib untuk Lokal dan Chain
                     if material_promo.strip() == "":
                         errors.append("Material Promo wajib diisi.")
                     if material_promo == "Tidak" and alasan_material.strip() == "":
@@ -294,15 +298,16 @@ with tab1:
                         errors.append("Promo di server kasir wajib diisi.")
                     if info_struk.strip() == "":
                         errors.append("Informasi potongan harga di struk wajib diisi.")
-        
+                    
                     # Validasi tambahan hanya jika produk_display == "Iya"
                     if produk_display == "Iya":
                         if harga_produk is None or harga_produk == 0:
                             errors.append("Harga produk wajib diisi jika produk terdisplay.")
-                        if tipe_account_value == "Chain" and expired_date is None:
-                            errors.append("Tanggal expired wajib diisi jika produk terdisplay.")
-                        if "gratis" in jenis_promo and (sisa_stock is None):
-                            errors.append("Sisa stock wajib diisi untuk promo yang mengandung 'gratis'.")
+                        # Sisa stock hanya untuk promo dengan 'gratis'
+                        if "gratis" in jenis_promo.lower():
+                            if sisa_stock is None:
+                                errors.append("Sisa stock wajib diisi untuk promo yang mengandung 'gratis'.")
+
         
                 # Jika ada error
                 if errors:
