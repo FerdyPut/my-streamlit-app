@@ -94,7 +94,7 @@ with tab1:
                 outlet_data[outlet].append({
                     "nama_produk": row['Nama Produk'],
                     "jenis_promo": row['Jenis Promo'],
-                    "periode_promo": row['Periode Promo']
+                    "periode_promo": row['Periode Promo'],
 st.set_page_config(page_title="BSI - Support Information", layout="wide")
 
 FOLDER_PATH = "saved_files"
