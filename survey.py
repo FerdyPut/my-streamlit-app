@@ -190,11 +190,14 @@ with tab1:
 
 #---------------------------------------------------------------DISPLAY PRODUK
         st.subheader(f"Detail Produk")
-        produk_display = st.selectbox(
-            f"Apakah produk {nama_produk} terdisplay di toko?", 
-            [" ", "Iya", "Stock Kosong", "Tidak Jual"], 
-            key="produk_display"
-        )
+        if nama_produk:  # Cek apakah nama_produk ada isinya
+            produk_display = st.selectbox(
+                f"Apakah produk {nama_produk} terdisplay di toko?", 
+                [" ", "Iya", "Stock Kosong", "Tidak Jual"], 
+                key="produk_display"
+            )
+        else:
+            st.warning("Silakan pilih produk terlebih dahulu.")
 
         # Default None untuk validasi yang lebih aman
         harga_produk = None
