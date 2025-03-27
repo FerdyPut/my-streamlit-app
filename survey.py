@@ -143,7 +143,7 @@ with tab1:
                         st.session_state.produk_dipilih[nama_surveyor] = []
                     if nama_produk not in st.session_state.produk_dipilih[nama_surveyor]:
                         st.session_state.produk_dipilih[nama_surveyor].append(nama_produk)
-                        st.experimental_rerun()  # Refresh UI agar produk terpilih langsung hilang
+                        st.rerun()  # Refresh UI agar produk terpilih langsung hilang
             
                 else:
                     st.info("Semua produk sudah diinput oleh surveyor ini.")
