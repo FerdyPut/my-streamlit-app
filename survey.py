@@ -372,7 +372,7 @@ with tab1:
                     df_existing.to_excel(file_path, index=False, engine="openpyxl")
                     st.success("Data berhasil disimpan!")
 
-                    st.info("Jikalau mau menginput data lagi silahkan refresh website!")   
+                    st.info("Silahkan input data lagi, tanpa refresh, dan mengganti produk saja untuk tidak mengisi lagi Kode Outlet dan Alamat Outlet!")   
 with tab2:
     if "admin_login" not in st.session_state:
         st.session_state.admin_login = False
