@@ -141,9 +141,15 @@ with tab1:
                     # **Auto-save pilihan produk**
                     if nama_surveyor not in st.session_state.produk_dipilih:
                         st.session_state.produk_dipilih[nama_surveyor] = []
-                    if nama_produk not in st.session_state.produk_dipilih[nama_surveyor]:
+                    if nama_produk and nama_produk not in st.session_state.produk_dipilih[nama_surveyor]:
                         st.session_state.produk_dipilih[nama_surveyor].append(nama_produk)
                         st.rerun()  # Refresh UI agar produk terpilih langsung hilang
+            
+                    # **Tambahkan pengecekan sebelum menggunakan nama_produk**
+                    if nama_produk:
+                        st.write(f"Apakah produk {nama_produk} terdisplay di toko?")
+                    else:
+                        st.warning("Pilih produk terlebih dahulu.")
             
                 else:
                     st.info("Semua produk sudah diinput oleh surveyor ini.")
@@ -151,6 +157,7 @@ with tab1:
             elif not produk_list:
                 st.info("Belum ada produk untuk outlet ini.")
 
+#----------------------------------------------------------------------
 
 
         # Daftar outlet yang termasuk Chain
