@@ -262,7 +262,7 @@ with tab1:
                     st.subheader(f"Informasi Tersetting Produk dan Harga di Struk Produk {nama_produk}")
                     promo_di_kasir = st.selectbox(
                         "Apakah promo tersetting di sistem server kasir?", 
-                        ["", "Ya", "Tidak"], 
+                        ["", "Ya", "Tidak", "Tidak Tahu"], 
                         key="promo_di_kasir"
                     )
                     info_struk = st.text_input("Informasi potongan harga yang tertera di struk:", key="info_struk")
