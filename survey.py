@@ -260,6 +260,10 @@ with tab1:
                     info_struk = st.text_input("Informasi potongan harga yang tertera di struk:", key="info_struk")
 
             # --- SUBMIT ---
+            # Inisialisasi session state jika belum ada
+            if "overview" not in st.session_state:
+                st.session_state["overview"] = {}
+
             if st.button("Submit"):
                 errors = []
 
@@ -365,6 +369,19 @@ with tab1:
                     st.success("Data berhasil disimpan!")
 
                     st.info("Jika sudah menginput silahkan input kembali, dengan menmilih kembali produk lainnya yang sesuai (jika masih dalam satu outlet yang sama). Jika sudah berbeda outlet, maka silahkan refresh website dan input kembali dari awal.")   
+                   
+                    # Simpan data per surveyor di session state
+                    if nama_surveyor not in st.session_state["overview"]:
+                        st.session_state["overview"][nama_surveyor] = []
+            
+                    st.session_state["overview"][nama_surveyor].append(new_data)
+                    st.success(f"Data berhasil disimpan untuk {nama_surveyor}!")
+            
+            # --- Tampilkan Data Surveyor yang Login ---
+            if nama_surveyor and nama_surveyor in st.session_state["overview"]:
+                st.subheader(f"Produk yang sudah diinput oleh {nama_surveyor}")
+                df_overview = pd.DataFrame(st.session_state["overview"][nama_surveyor])
+                st.table(df_overview)
 with tab2:
     if "admin_login" not in st.session_state:
         st.session_state.admin_login = False
