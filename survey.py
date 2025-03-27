@@ -119,17 +119,28 @@ with tab1:
                         </span>
                     </div>
                     """, unsafe_allow_html=True)
-                    
+
                 produk_list = outlet_data.get(tipe_outlet, [])
-                produk_names = [p["nama_produk"] for p in produk_list]
-
-                if produk_list:
-                    nama_produk = st.selectbox("Nama Produk:", produk_names, key="nama_produk")
+                
+                if "produk_dipilih" not in st.session_state:
+                    st.session_state.produk_dipilih = {}
+        
+                produk_tersisa = [p["nama_produk"] for p in produk_list if p["nama_produk"] not in st.session_state.produk_dipilih.get(nama_surveyor, [])]
+                
+                if produk_tersisa:
+                    nama_produk = st.selectbox("Nama Produk:", produk_tersisa, key="nama_produk")
                     produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
-                    periode_promo = produk_terpilih.get("periode_promo", "")
-
+        
                     st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
-                    st.text_input("Periode Promo:", value=periode_promo, disabled=True)
+                    st.text_input("Periode Promo:", value=produk_terpilih.get("periode_promo", ""), disabled=True)
+        
+                    if st.button("Simpan Produk"):
+                        if nama_surveyor not in st.session_state.produk_dipilih:
+                            st.session_state.produk_dipilih[nama_surveyor] = []
+                        st.session_state.produk_dipilih[nama_surveyor].append(nama_produk)
+                        st.experimental_rerun()
+                else:
+                    st.info("Semua produk sudah diinput oleh surveyor ini.")
 
                     # Cek apakah jenis_promo mengandung kata 'gratis'
                     jenis_promo = produk_terpilih.get("jenis_promo", "").lower()
