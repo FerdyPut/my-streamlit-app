@@ -97,39 +97,60 @@ with tab1:
             tipe_outlet = st.selectbox("Pilih Outlet (Hari Ini):", list(outlet_data.keys()))
 
             if tipe_outlet:
-                    st.write(f"Promo di {tipe_outlet}:")
-                    for i, promo in enumerate(outlet_data[tipe_outlet], start=1):
-                        st.markdown(f"""
-                        <div style='margin-bottom: 12px;'>
-                            <span style='background-color: #000000; color: #FFFFFF; padding: 4px 8px; 
-                                         border-radius: 5px; font-size: 90%; margin-right: 8px; font-weight: bold;'>
-                                {i}.
-                            </span>
-                            <span style='background-color: #89AC46; color: #000000; padding: 4px 8px; 
-                                         border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
-                                {promo['nama_produk']}
-                            </span>
-                            <span style='background-color: #E50046; color: #000000; padding: 4px 8px; 
-                                         border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
-                                {promo['jenis_promo']}
-                            </span>
-                            <span style='background-color: #626F47; color: #000000; padding: 4px 8px; 
-                                         border-radius: 5px; font-size: 90%; font-weight: bold;'>
-                                Periode: {promo['periode_promo']}
-                            </span>
-                        </div>
-                        """, unsafe_allow_html=True)
-                        
-                    produk_list = outlet_data.get(tipe_outlet, [])
-                    produk_names = [p["nama_produk"] for p in produk_list]
+                st.write(f"Promo di {tipe_outlet}:")
+                for i, promo in enumerate(outlet_data[tipe_outlet], start=1):
+                    st.markdown(f"""
+                    <div style='margin-bottom: 12px;'>
+                        <span style='background-color: #000000; color: #FFFFFF; padding: 4px 8px; 
+                                     border-radius: 5px; font-size: 90%; margin-right: 8px; font-weight: bold;'>
+                            {i}.
+                        </span>
+                        <span style='background-color: #89AC46; color: #000000; padding: 4px 8px; 
+                                     border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
+                            {promo['nama_produk']}
+                        </span>
+                        <span style='background-color: #E50046; color: #000000; padding: 4px 8px; 
+                                     border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
+                            {promo['jenis_promo']}
+                        </span>
+                        <span style='background-color: #626F47; color: #000000; padding: 4px 8px; 
+                                     border-radius: 5px; font-size: 90%; font-weight: bold;'>
+                            Periode: {promo['periode_promo']}
+                        </span>
+                    </div>
+                    """, unsafe_allow_html=True)
             
-                    if produk_list:
-                        nama_produk = st.selectbox("Nama Produk:", produk_names, key="nama_produk")
-                        produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
-                        periode_promo = produk_terpilih.get("periode_promo", "")
+                produk_list = outlet_data.get(tipe_outlet, [])
             
-                        st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
-                        st.text_input("Periode Promo:", value=periode_promo, disabled=True)
+                if "produk_dipilih" not in st.session_state:
+                    st.session_state.produk_dipilih = {}
+            
+                # Filter hanya produk yang belum dipilih oleh surveyor ini
+                produk_tersisa = [
+                    p for p in produk_list 
+                    if p["nama_produk"] not in st.session_state.produk_dipilih.get(nama_surveyor, [])
+                ]
+            
+                if produk_tersisa:
+                    nama_produk = st.selectbox("Nama Produk:", [p["nama_produk"] for p in produk_tersisa], key="nama_produk")
+                    produk_terpilih = next((p for p in produk_tersisa if p["nama_produk"] == nama_produk), {})
+            
+                    st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
+                    st.text_input("Periode Promo:", value=produk_terpilih.get("periode_promo", ""), disabled=True)
+            
+                    # **Auto-save pilihan produk**
+                    if nama_surveyor not in st.session_state.produk_dipilih:
+                        st.session_state.produk_dipilih[nama_surveyor] = []
+                    if nama_produk not in st.session_state.produk_dipilih[nama_surveyor]:
+                        st.session_state.produk_dipilih[nama_surveyor].append(nama_produk)
+                        st.experimental_rerun()  # Refresh UI agar produk terpilih langsung hilang
+            
+                else:
+                    st.info("Semua produk sudah diinput oleh surveyor ini.")
+            
+            elif not produk_list:
+                st.info("Belum ada produk untuk outlet ini.")
+
 
 
         # Daftar outlet yang termasuk Chain
