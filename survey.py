@@ -120,42 +120,37 @@ with tab1:
                     </div>
                     """, unsafe_allow_html=True)
             
+                # Daftar produk berdasarkan outlet
                 produk_list = outlet_data.get(tipe_outlet, [])
-            
+                
+                # Pastikan state untuk menyimpan produk yang dipilih oleh surveyor
                 if "produk_dipilih" not in st.session_state:
                     st.session_state.produk_dipilih = {}
-            
-                # Filter hanya produk yang belum dipilih oleh surveyor ini
-                produk_tersisa = [
-                    p for p in produk_list 
-                    if p["nama_produk"] not in st.session_state.produk_dipilih.get(nama_surveyor, [])
-                ]
-            
+                
+                # Ambil daftar produk yang BELUM dipilih oleh surveyor ini
+                produk_tersisa = [p["nama_produk"] for p in produk_list if p["nama_produk"] not in st.session_state.produk_dipilih.get(nama_surveyor, [])]
+                
+                # Jika masih ada produk yang belum dipilih, tampilkan selectbox
                 if produk_tersisa:
-                    nama_produk = st.selectbox("Nama Produk:", [p["nama_produk"] for p in produk_tersisa], key="nama_produk")
-                    produk_terpilih = next((p for p in produk_tersisa if p["nama_produk"] == nama_produk), {})
-            
+                    nama_produk = st.selectbox("Nama Produk:", produk_tersisa, key="nama_produk")
+                    
+                    # Ambil detail produk yang dipilih
+                    produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
+                
+                    # Tampilkan informasi produk
                     st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
                     st.text_input("Periode Promo:", value=produk_terpilih.get("periode_promo", ""), disabled=True)
-            
-                    # **Auto-save pilihan produk**
-                    if nama_surveyor not in st.session_state.produk_dipilih:
-                        st.session_state.produk_dipilih[nama_surveyor] = []
-                    if nama_produk and nama_produk not in st.session_state.produk_dipilih[nama_surveyor]:
-                        st.session_state.produk_dipilih[nama_surveyor].append(nama_produk)
-                        st.rerun()  # Refresh UI agar produk terpilih langsung hilang
-            
-                    # **Tambahkan pengecekan sebelum menggunakan nama_produk**
+                
+                    # Simpan produk otomatis setelah memilih (tanpa tombol)
                     if nama_produk:
-                        st.write(f"Apakah produk {nama_produk} terdisplay di toko?")
-                    else:
-                        st.warning("Pilih produk terlebih dahulu.")
-            
+                        if nama_surveyor not in st.session_state.produk_dipilih:
+                            st.session_state.produk_dipilih[nama_surveyor] = []
+                        st.session_state.produk_dipilih[nama_surveyor].append(nama_produk)
+                        st.rerun()  # Refresh tampilan agar produk yang sudah dipilih hilang
+                
                 else:
                     st.info("Semua produk sudah diinput oleh surveyor ini.")
-            
-            elif not produk_list:
-                st.info("Belum ada produk untuk outlet ini.")
+
 
 #----------------------------------------------------------------------
 
