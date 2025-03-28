@@ -508,10 +508,16 @@ df_overview = st.session_state["overview"]
 with tab2:
     st.subheader("Produk yang sudah diinput")
 
+    # Pastikan df_overview ada di session state
+    if "overview" not in st.session_state:
+        st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk"])
+
+    df_overview = st.session_state["overview"]
+
     if not df_overview.empty:
         # Pilih surveyor untuk melihat data
-        nama_surveyor = st.selectbox("Pilih Surveyor", nama_surveyor)
-
+        nama_surveyor = st.selectbox("Nama Anda", nama_surveyor)
+        st.write("Hasil Inputan Anda:")
         # Filter berdasarkan surveyor
         df_filtered = df_overview[df_overview["Nama Surveyor"] == nama_surveyor]
 
@@ -524,12 +530,13 @@ with tab2:
             st.info(f"Tidak ada produk yang diinput oleh {nama_surveyor}.")
     else:
         st.warning("Belum ada data yang tersimpan.")
-        # Tombol untuk menghapus data overview
-        st.info("Hapus jika semua sudah lengkap dalam 1 komponen produk!")
-        if st.button("Hapus Semua Data Overview"):
-            st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk"])
-            st.success("Semua data overview telah dihapus!")
-            st.rerun()
+
+    # **Tombol Hapus Selalu Ada**
+    st.info("Hapus jika semua sudah lengkap dalam 1 komponen produk!")
+    if st.button("Hapus Semua Data Overview"):
+        st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk"])
+        st.success("Semua data overview telah dihapus!")
+        st.rerun()  # Untuk langsung refresh tampilan setelah penghapusan
 
 with tab3:
     if "admin_login" not in st.session_state:
