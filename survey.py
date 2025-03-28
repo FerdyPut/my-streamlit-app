@@ -38,7 +38,10 @@ st.markdown(
 )
 
 file_path = "data_survey.xlsx"
-tab0, tab1, tab2 = st.tabs(["Survey Promo", "Form Survey Inputan", "Hasil Inputan Survey"])
+if "overview" not in st.session_state:
+    st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk", "Status"])
+
+tab0, tab1, tab2, tab3 = st.tabs(["Survey Promo", "Form Survey Inputan","Cek Produk yang sudah Input", "Hasil Inputan Survey"])
 
 with tab0:
         st.header("Survey Promo - By Business Support Infromation (BSI)")
@@ -122,15 +125,23 @@ with tab1:
                         
                     produk_list = outlet_data.get(tipe_outlet, [])
                     produk_names = [p["nama_produk"] for p in produk_list]
-            
+    
                     if produk_list:
                         nama_produk = st.selectbox("Nama Produk:", produk_names, key="nama_produk")
                         produk_terpilih = next((p for p in produk_list if p["nama_produk"] == nama_produk), {})
                         periode_promo = produk_terpilih.get("periode_promo", "")
-            
+    
                         st.text_input("Jenis Promo:", value=produk_terpilih.get("jenis_promo", ""), disabled=True)
                         st.text_input("Periode Promo:", value=periode_promo, disabled=True)
-
+    
+                        # Cek apakah jenis_promo mengandung kata 'gratis'
+                        jenis_promo = produk_terpilih.get("jenis_promo", "").lower()
+                        if "gratis" in jenis_promo:
+                            st.text("Promo mengandung kata 'gratis'")
+                        else:
+                            st.text("Promo tidak mengandung kata 'gratis'")
+                    else:
+                        st.info("Belum ada produk untuk outlet ini.")
 
         # Daftar outlet yang termasuk Chain
         chain_outlet = [
@@ -260,10 +271,7 @@ with tab1:
                     info_struk = st.text_input("Informasi potongan harga yang tertera di struk:", key="info_struk")
 
             # --- SUBMIT ---
-            # Inisialisasi session state jika belum ada
-            if "overview" not in st.session_state:
-                st.session_state["overview"] = {}
-
+             #--------------- TOMBOL SUBMIT DATA   
             if st.button("Submit"):
                 errors = []
 
@@ -271,13 +279,44 @@ with tab1:
                 if not nama_surveyor or not kode_outlet or not kota:
                     errors.append("Nama Surveyor, Kode Outlet, dan Kota wajib diisi!")
 
+#-------------------------SESSION NTUK OVERVIEW SURVEYOR               
+                
+                if errors:
+                    for err in errors:
+                        st.error(err)
+                else:
+                    # Format data baru
+                    new_data = pd.DataFrame([{
+                        "Timestamp Pengisian": datetime.now(ZoneInfo('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S'),
+                        "Nama Surveyor": nama_surveyor,
+                        "Nama Produk": nama_produk,
+                        "Status": "Sudah Terinput"
+                    }])
+
+                    # 🔹 Tambahkan ke session_state["overview"]
+                    st.session_state["overview"] = pd.concat([st.session_state["overview"], new_data], ignore_index=True)
+
+                    # 🔹 Simpan ke Excel
+                    file_path = "data_survey.xlsx"
+                    if os.path.exists(file_path):
+                        df_existing = pd.read_excel(file_path, engine="openpyxl")
+                    else:
+                        df_existing = pd.DataFrame()
+
+                    df_existing = pd.concat([df_existing, new_data], ignore_index=True)
+                    df_existing.to_excel(file_path, index=False, engine="openpyxl")
+
+#-------------------------------------------------------
+
                 # --- Validasi Step Lainnya
                 if produk_display in ["Iya", "Stock Kosong", "Tidak Jual"]:
                     # Field yang hanya wajib untuk Chain
                     if tipe_account_value == "Chain":
                         if promo_mailer.strip() == "":
                             errors.append("Promo Mailer wajib diisi untuk account Chain.")
-                        if expired_date is None:
+
+                        # Hanya wajib isi expired date jika produk display = "Iya"
+                        if produk_display == "Iya" and expired_date is None:
                             errors.append("Tanggal expired wajib diisi untuk account Chain jika produk terdisplay.")
 
                     # Field yang wajib untuk Lokal dan Chain
@@ -369,20 +408,36 @@ with tab1:
                     st.success("Data berhasil disimpan!")
 
                     st.info("Jika sudah menginput silahkan input kembali, dengan menmilih kembali produk lainnya yang sesuai (jika masih dalam satu outlet yang sama). Jika sudah berbeda outlet, maka silahkan refresh website dan input kembali dari awal.")   
-                   
-                    # Simpan data per surveyor di session state
-                    if nama_surveyor not in st.session_state["overview"]:
-                        st.session_state["overview"][nama_surveyor] = []
-            
-                    st.session_state["overview"][nama_surveyor].append(new_data)
-                    st.success(f"Data berhasil disimpan untuk {nama_surveyor}!")
-            
-            # --- Tampilkan Data Surveyor yang Login ---
-            if nama_surveyor and nama_surveyor in st.session_state["overview"]:
-                st.subheader(f"Produk yang sudah diinput oleh {nama_surveyor}")
-                df_overview = pd.DataFrame(st.session_state["overview"][nama_surveyor])
-                st.table(df_overview)
+# **Tab 3: Cek Data Surveyor**
+df_overview = st.session_state["overview"]
+
 with tab2:
+    st.subheader("Produk yang sudah diinput")
+
+    if not df_overview.empty:
+        # Pilih surveyor untuk melihat data
+        nama_surveyor = st.selectbox("Pilih Surveyor", nama_surveyor)
+
+        # Filter berdasarkan surveyor
+        df_filtered = df_overview[df_overview["Nama Surveyor"] == nama_surveyor]
+
+        if not df_filtered.empty:
+            df_display = df_filtered.copy()
+            df_display["Status"] = "Sudah terinput semua"
+
+            st.dataframe(df_display[["Timestamp Pengisian", "Nama Produk", "Status"]], hide_index=True)
+        else:
+            st.info(f"Tidak ada produk yang diinput oleh {nama_surveyor}.")
+    else:
+        st.warning("Belum ada data yang tersimpan.")
+        # Tombol untuk menghapus data overview
+        st.info("Hapus jika semua sudah lengkap dalam 1 komponen produk!")
+        if st.button("Hapus Semua Data Overview"):
+            st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk"])
+            st.success("Semua data overview telah dihapus!")
+            st.rerun()
+
+with tab3:
     if "admin_login" not in st.session_state:
         st.session_state.admin_login = False
 
