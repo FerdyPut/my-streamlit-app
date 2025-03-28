@@ -18,7 +18,7 @@ st.markdown(
     div[data-testid="stWidgetLabel"] {
         font-size: 22px !important;
         font-weight: bold;
-        color: #333333;
+        color: #FFFFF;
     }
 
     /* Mengubah ukuran label dalam widget */
