@@ -173,23 +173,8 @@ with tab1:
                     st.write(f"Promo di {tipe_outlet}:")
                     for i, promo in enumerate(outlet_data[tipe_outlet], start=1):
                         st.markdown(f"""
-                        <div style='margin-bottom: 12px;'>
-                            <span style='background-color: #000000; color: #FFFFFF; padding: 4px 8px; 
-                                         border-radius: 5px; font-size: 90%; margin-right: 8px; font-weight: bold;'>
-                                {i}.
-                            </span>
-                            <span style='background-color: #89AC46; color: #000000; padding: 4px 8px; 
-                                         border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
-                                {promo['nama_produk']}
-                            </span>
-                            <span style='background-color: #E50046; color: #000000; padding: 4px 8px; 
-                                         border-radius: 5px; font-size: 90%; margin-right: 5px; font-weight: bold;'>
-                                {promo['jenis_promo']}
-                            </span>
-                            <span style='background-color: #626F47; color: #000000; padding: 4px 8px; 
-                                         border-radius: 5px; font-size: 90%; font-weight: bold;'>
-                                Periode: {promo['periode_promo']}
-                            </span>
+                        <div style='margin-bottom: 12px; font-size: 16px; font-weight: bold;'>
+                            {i}. {promo['nama_produk']} - {promo['jenis_promo']} (Periode: {promo['periode_promo']})
                         </div>
                         """, unsafe_allow_html=True)
                         
