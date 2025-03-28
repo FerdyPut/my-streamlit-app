@@ -308,12 +308,12 @@ with tab1:
 
             # --- Chain khusus: expired date --- (hanya jika display = "Iya")
             if produk_display == "Iya" and tipe_account_value == "Chain":
+            import datetime
                 expired_date = st.date_input(
                     f"Tanggal Expired Date produk {nama_produk}",
-                    value=datetime.date.today(),  # Gunakan tanggal hari ini sebagai default
+                    value=datetime.date.today(),  # Pastikan ini valid
                     key="expired_date"
                 )
-
             # Step 2 - Katalog MUNCUL untuk semua display selain kosong
             if tipe_account_value == "Chain":
                 st.subheader(f"Informasi Katalog Produk")
