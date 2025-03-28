@@ -12,11 +12,13 @@ st.title("Form Survey Promo HCO Chain dan Lokal Tahun 2025")
 st.markdown(
     """
     <style>
-    /* Mengubah ukuran semua label */
-    div[data-testid="stMarkdownContainer"] > p {
-        font-size: 20px !important;
+/* Menyesuaikan ukuran teks di dalam container widget */
+    section.main div[role="radiogroup"] label, /* Untuk radio button */
+    section.main label, /* Untuk semua widget */
+    div[data-testid="stWidgetLabel"] {
+        font-size: 22px !important;
         font-weight: bold;
-        color: #FFFFFF;
+        color: #333333;
     }
 
     /* Mengubah ukuran label dalam widget */
