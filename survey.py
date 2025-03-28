@@ -309,7 +309,7 @@ with tab1:
             # --- Chain khusus: expired date --- (hanya jika display = "Iya")
             if produk_display == "Iya" and tipe_account_value == "Chain":
                 expired_date = st.date_input(
-                    f"Tanggal Expired Date produk {nama_produk}", 
+                    f"Tanggal Expired Date produk {prev_nama_produk}", 
                     key="expired_date"
                 )
 
