@@ -65,7 +65,46 @@ with tab0:
         )
         
 with tab1:
+        
         st.header("Form Input")
+        # Inisialisasi session_state jika belum ada
+        if "prev_nama_surveyor" not in st.session_state:
+            st.session_state["prev_nama_surveyor"] = None
+        if "prev_kota" not in st.session_state:
+            st.session_state["prev_kota"] = None
+        if "prev_tipe_outlet" not in st.session_state:
+            st.session_state["prev_tipe_outlet"] = None
+        if "prev_nama_produk" not in st.session_state:
+            st.session_state["prev_nama_produk"] = None
+
+        if "alamat_outlet" not in st.session_state:
+            st.session_state["alamat_outlet"] = ""
+        if "jam" not in st.session_state:
+            st.session_state["jam"] = 0
+        if "menit" not in st.session_state:
+            st.session_state["menit"] = 0
+        if "tanggal" not in st.session_state:
+            st.session_state["tanggal"] = datetime.today()
+        if "kode_outlet" not in st.session_state:
+            st.session_state["kode_outlet"] = ""
+
+        pertanyaan_produk = {
+            "harga_produk": 0.0,  # Gunakan angka bukan string
+            "expired_date": None,
+            "sisa_stock": 0,
+            "promo_mailer": "",
+            "keterangan": "",
+            "material_promo": "",
+            "alasan_material": "",
+            "promo_di_kasir": "",
+            "info_struk": ""
+        }
+
+        # Pastikan setiap key dalam session_state sudah diinisialisasi dengan benar
+        for key, value in pertanyaan_produk.items():
+            if key not in st.session_state:
+                st.session_state[key] = value
+#------------------------------------------------------------
         nama_surveyor = st.selectbox("Nama Surveyor:", [
             "Joko Lestiono", "Achsin", "Asep Rio", "Widi Setiawan", "Hadi Syamsi G.", 
             "Andri", "Bambang", "Sigit Ari W.", "Iswandi", "Zazat Sudrajat", 
@@ -78,6 +117,12 @@ with tab1:
         bulan = st.selectbox("Bulan: ", [str(i) for i in range(1, 13)],key="bulan")
 
 #-------------------------------------------HARUS DIUPDATE NAMA PRODUK, PERIODE, DAN JENIS PROMO
+        kota = st.selectbox("Kota:", [
+        "Surabaya", "Bandung", "Bekasi", "Semarang", "Jember", "Medan", "Pamekasan", 
+        "Solo", "Malang", "Kediri", "Tangerang", "Makassar", "Palembang", 
+        "Pekanbaru", "Pontianak"
+        ],key="kota")
+
         today = datetime.now(ZoneInfo("Asia/Jakarta")).date()
         sheet_url = "https://docs.google.com/spreadsheets/d/1GIfUGSMLfCMiDMy1aFHm_05F1IJXzY3kY89QCceFDOA/export?format=csv"
         df = pd.read_csv(sheet_url)
@@ -143,11 +188,52 @@ with tab1:
                     else:
                         st.info("Belum ada produk untuk outlet ini.")
 
-        # Daftar outlet yang termasuk Chain
+    # Daftar outlet yang termasuk Chain
         chain_outlet = [
             "Indomaret", "Indogrosir", "Alfamart", 
             "Alfamidi", "Lion Superindo", "Clandys", "Family Mart"
         ]
+
+#-------------------------------------------------
+        # **Cek perubahan Nama Surveyor, Kota, atau Tipe Outlet → Reset Semua**
+        # Cek apakah harus reset semua atau hanya pertanyaan produk
+        reset_all = False
+        reset_produk = False
+
+        if (
+            nama_surveyor != st.session_state["prev_nama_surveyor"] or 
+            kota != st.session_state["prev_kota"] or 
+            tipe_outlet != st.session_state["prev_tipe_outlet"]
+        ):
+            reset_all = True
+
+        if nama_produk != st.session_state["prev_nama_produk"]:
+            reset_produk = True
+
+        # **Update prev_ values lebih awal untuk menghindari bug**
+        st.session_state.update({
+            "prev_nama_surveyor": nama_surveyor,
+            "prev_kota": kota,
+            "prev_tipe_outlet": tipe_outlet,
+            "prev_nama_produk": nama_produk
+        })
+
+        # **Eksekusi reset sesuai kondisi**
+        if reset_all:
+            st.session_state.update({
+                "alamat_outlet": "",
+                "jam": 0,
+                "menit": 0,
+                "kode_outlet": "",
+                "tanggal": datetime.today(),
+            })
+
+        if reset_produk:  # Ini harus tetap dijalankan meskipun reset_all sudah berjalan
+            for key in pertanyaan_produk:
+                st.session_state[key] = ""
+
+
+
 
         # Tentukan tipe account berdasarkan outlet yang dipilih
         if tipe_outlet in chain_outlet:
@@ -160,7 +246,8 @@ with tab1:
         kode_outlet = st.text_input("Kode Outlet:", key="kode_outlet")
         st.caption("Isikan - jika tidak tau")
 
-        tanggal = st.date_input("Tanggal", value=datetime.today(),key="tanggal")
+
+        tanggal = st.date_input("Tanggal Kunjungan", value=datetime.today(),key="tanggal")
 
         col1, col2 = st.columns(2)
         with col1:
@@ -169,12 +256,10 @@ with tab1:
             menit = st.selectbox("Menit:", list(range(0, 60)), format_func=lambda x: f"{x:02d}",key="menit")
 
         jam_final = time(hour=jam, minute=menit)
-        kota = st.selectbox("Kota:", [
-            "Surabaya", "Bandung", "Bekasi", "Semarang", "Jember", "Medan", "Pamekasan", 
-            "Solo", "Malang", "Kediri", "Tangerang", "Makassar", "Palembang", 
-            "Pekanbaru", "Pontianak"
-        ],key="kota")
+
         alamat_outlet = st.text_input("Alamat Outlet:",key="alamat_outlet")
+        
+
 
 #---------------------------------------------------------------DISPLAY PRODUK
         st.subheader(f"Detail Produk")
@@ -185,6 +270,8 @@ with tab1:
         )
 
         # Default None untuk validasi yang lebih aman
+    # Reset Pertanyaan Produk dengan tipe data yang benar
+       # Default None untuk validasi yang lebih aman
         harga_produk = None
         expired_date = None
         sisa_stock = None
@@ -199,9 +286,16 @@ with tab1:
         if produk_display.strip() != "":
             # --- Chain & Lokal: Harga & Stock --- (hanya jika display = "Iya")
             if produk_display == "Iya" and tipe_account_value in ["Chain", "Lokal"]:
+                harga_produk_value = st.session_state.get("harga_produk", 0.0)
+                if harga_produk_value is None or isinstance(harga_produk_value, str):
+                    harga_produk_value = 0.0  # Default jika terjadi kesalahan tipe data
+
+                # Gunakan nilai yang sudah diperbaiki dalam number_input
                 harga_produk = st.number_input(
                     f"Berapa harga produk {nama_produk} per pcs yang tertera di rak / server kasir?",
-                    min_value=0, key="harga_produk"
+                    min_value=0.0,
+                    key="harga_produk",
+                    value=harga_produk_value
                 )
                 st.caption("Note: Harga Asli, sebelum potongan promo (angka nya saja)")
 
@@ -407,7 +501,7 @@ with tab1:
                     df_existing.to_excel(file_path, index=False, engine="openpyxl")
                     st.success("Data berhasil disimpan!")
 
-                    st.info("Jika sudah menginput silahkan input kembali, dengan menmilih kembali produk lainnya yang sesuai (jika masih dalam satu outlet yang sama). Jika sudah berbeda outlet, maka silahkan refresh website dan input kembali dari awal.")   
+                    st.info("Jika sudah menginput silahkan input kembali, dengan menmilih kembali produk lainnya yang sesuai (jika masih dalam satu outlet yang sama). Jika sudah berbeda outlet/kota, maka silahkan refresh website dan input kembali dari awal.")   
 # **Tab 3: Cek Data Surveyor**
 df_overview = st.session_state["overview"]
 
