@@ -453,8 +453,9 @@ with tab1:
                     export_harga = harga_produk if isinstance(harga_produk, int) else "-"
                     # Data dict
                     from zoneinfo import ZoneInfo
+                    tz = pytz.timezone('Asia/Jakarta')
                     new_data = {
-                        "Timestamp Pengisian" : datetime.now(ZoneInfo('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S'),
+                        "Timestamp Pengisian": datetime.now(tz).strftime('%Y-%m-%d %H:%M:%S'),
                         "Tipe Outlet": tipe_outlet,
                         "Tipe Account": tipe_account,
                         "Bulan": bulan,
