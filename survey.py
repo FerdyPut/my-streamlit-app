@@ -4,42 +4,64 @@ from datetime import datetime, time
 import os
 from io import BytesIO
 import openpyxl
-from datetime import datetime
-from zoneinfo import ZoneInfo
 from datetime import datetime, date
-import pytz
+from zoneinfo import ZoneInfo
+
 st.set_page_config(page_title="Form Survey Promo HCO Chain dan Lokal - Siantar Top - BSI ", page_icon=":bookmark_tabs:", layout="centered")
 st.title("Form Survey Promo HCO Chain dan Lokal Tahun 2025")
-background_url = "https://upload.wikimedia.org/wikipedia/commons/c/cc/Logo_Siantar_Top.svg"
-
 st.markdown(
-    f"""
+    """
     <style>
-    .stApp::before {{
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url("{background_url}") no-repeat center center fixed;
-        background-size: cover;
-        filter: blur(10px);
-        opacity: 0.6; /* transparansi background */
-        z-index: -1;
-    }}
-    /* Biar konten tetap tajam */
-    .stApp {{
-        background: transparent;
-    }}
+    /* Mengubah ukuran semua label */
+    div[data-testid="stMarkdownContainer"] > p {
+        font-size: 20px !important;
+        font-weight: bold;
+        color: #FFFFFF;
+    }
+
+    /* Mengubah ukuran label dalam widget */
+    div[data-testid="stWidgetLabel"] {
+        font-size: 20px !important;
+        font-weight: bold;
+        color: #FFFFFF;
+    }
+    /* Perbesar teks secara umum */
+    body, div, input, select, button, label {
+        font-size: 20px !important;
+    }
+
+    /* Perbesar judul */
+    .stApp h1 {
+        font-size: 30px !important;
+    }
+
+    /* Perbesar teks tabel */
+    .dataframe th, .dataframe td, .tabs {
+        font-size: 18px !important;
+    }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-file_path = "data_survey.xlsx"
+
+
+
+# Inisialisasi session state untuk overview
 if "overview" not in st.session_state:
     st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk", "Status"])
+
+# File untuk menyimpan data
+EXCEL_FILE = "overview_data.xlsx"
+file_path = "data_survey.xlsx"
+
+def load_from_excel():
+    if os.path.exists(EXCEL_FILE):
+        return pd.read_excel(EXCEL_FILE, engine="openpyxl")
+    return pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk"])
+
+def save_to_excel(df, file_path):
+    df.to_excel(file_path, index=False, engine="openpyxl")
 
 tab0, tab1, tab2, tab3 = st.tabs(["Survey Promo", "Form Survey Inputan","Cek Produk yang sudah Input", "Hasil Inputan Survey"])
 
@@ -123,7 +145,8 @@ with tab1:
         "Pekanbaru", "Pontianak"
         ],key="kota")
 
-        today = datetime.now(ZoneInfo("Asia/Jakarta")).date()
+
+        today = datetime.now().date()
         sheet_url = "https://docs.google.com/spreadsheets/d/1GIfUGSMLfCMiDMy1aFHm_05F1IJXzY3kY89QCceFDOA/export?format=csv"
         df = pd.read_csv(sheet_url)
         df['Tanggal Survey'] = pd.to_datetime(df['Tanggal Survey']).dt.date
@@ -373,6 +396,8 @@ with tab1:
                 # Validasi field wajib utama
                 if not nama_surveyor or not kode_outlet or not kota:
                     errors.append("Nama Surveyor, Kode Outlet, dan Kota wajib diisi!")
+                if "overview" not in st.session_state or st.session_state["overview"].empty:
+                    st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk", "Status"])
 
 #-------------------------SESSION NTUK OVERVIEW SURVEYOR               
                 
@@ -381,8 +406,9 @@ with tab1:
                         st.error(err)
                 else:
                     # Format data baru
+                    from datetime import datetime
                     new_data = pd.DataFrame([{
-                        "Timestamp Pengisian": datetime.now(ZoneInfo('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S'),
+                        "Timestamp Pengisian": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                         "Nama Surveyor": nama_surveyor,
                         "Nama Produk": nama_produk,
                         "Status": "Sudah Terinput"
@@ -396,9 +422,12 @@ with tab1:
                     if os.path.exists(file_path):
                         df_existing = pd.read_excel(file_path, engine="openpyxl")
                     else:
-                        df_existing = pd.DataFrame()
+                        df_existing = pd.DataFrame()  # Buat DataFrame kosong jika file belum ada
 
-                    df_existing = pd.concat([df_existing, new_data], ignore_index=True)
+                    # 🔹 Pastikan hanya menambahkan data utama (bukan overview)
+                    df_existing = pd.concat([df_existing], ignore_index=True)
+
+                    # 🔹 Simpan ke file Excel
                     df_existing.to_excel(file_path, index=False, engine="openpyxl")
 
 #-------------------------------------------------------
@@ -452,10 +481,8 @@ with tab1:
                     export_sisa_stock = sisa_stock if isinstance(sisa_stock, int) else "-"
                     export_harga = harga_produk if isinstance(harga_produk, int) else "-"
                     # Data dict
-                    from zoneinfo import ZoneInfo
-                    tz = pytz.timezone('Asia/Jakarta')
                     new_data = {
-                        "Timestamp Pengisian": datetime.now(tz).strftime('%Y-%m-%d %H:%M:%S'),
+                        "Timestamp Pengisian": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                         "Tipe Outlet": tipe_outlet,
                         "Tipe Account": tipe_account,
                         "Bulan": bulan,
@@ -503,43 +530,38 @@ with tab1:
                     df_existing = df_existing[order]
                     df_existing.to_excel(file_path, index=False, engine="openpyxl")
                     st.success("Data berhasil disimpan!")
-
+                    
+                    # Simpan ke overview_data.xlsx
+                    save_to_excel(st.session_state["overview"], EXCEL_FILE)
                     st.info("Jika sudah menginput silahkan input kembali, dengan menmilih kembali produk lainnya yang sesuai (jika masih dalam satu outlet yang sama). Jika sudah berbeda outlet/kota, maka silahkan refresh website dan input kembali dari awal.")   
-# **Tab 3: Cek Data Surveyor**
-df_overview = st.session_state["overview"]
-
 with tab2:
     st.subheader("Produk yang sudah diinput")
 
-    # Pastikan df_overview ada di session state
-    if "overview" not in st.session_state:
-        st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk"])
-
-    df_overview = st.session_state["overview"]
-
+    # Load data saat aplikasi dijalankan
+    df_overview = load_from_excel()
     if not df_overview.empty:
-        # Pilih surveyor untuk melihat data
-        nama_surveyor = st.selectbox("Nama Anda", nama_surveyor)
-        st.write("Hasil Inputan Anda:")
-        # Filter berdasarkan surveyor
-        df_filtered = df_overview[df_overview["Nama Surveyor"] == nama_surveyor]
-
-        if not df_filtered.empty:
-            df_display = df_filtered.copy()
-            df_display["Status"] = "Sudah terinput semua"
-
-            st.dataframe(df_display[["Timestamp Pengisian", "Nama Produk", "Status"]], hide_index=True)
-        else:
-            st.info(f"Tidak ada produk yang diinput oleh {nama_surveyor}.")
+        list_surveyor = df_overview["Nama Surveyor"].dropna().unique().tolist()
+        if list_surveyor:
+            nama_surveyor_selected = st.selectbox("Nama Anda", list_surveyor)
+            df_filtered = df_overview[df_overview["Nama Surveyor"] == nama_surveyor_selected]
+            
+            if not df_filtered.empty:
+                df_filtered["Status"] = "Sudah terinput semua"
+                st.dataframe(df_filtered[["Timestamp Pengisian", "Nama Produk", "Status"]], hide_index=True)
+            else:
+                st.info(f"Tidak ada produk yang diinput oleh {nama_surveyor_selected}.")
     else:
         st.warning("Belum ada data yang tersimpan.")
+
 
     # **Tombol Hapus Selalu Ada**
     st.info("Hapus jika semua sudah lengkap dalam 1 komponen produk!")
     if st.button("Hapus Semua Data Overview"):
-        st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk"])
+        st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk", "Status"])
+        save_to_excel(st.session_state["overview"], EXCEL_FILE)
         st.success("Semua data overview telah dihapus!")
-        st.rerun()  # Untuk langsung refresh tampilan setelah penghapusan
+        st.rerun()
+
 
 with tab3:
     if "admin_login" not in st.session_state:
