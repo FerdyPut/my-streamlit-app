@@ -308,7 +308,7 @@ with tab1:
 
             # --- Chain khusus: expired date --- (hanya jika display = "Iya")
             if produk_display == "Iya" and tipe_account_value == "Chain":
-            import datetime
+                import datetime
                 expired_date = st.date_input(
                     f"Tanggal Expired Date produk {nama_produk}",
                     value=datetime.date.today(),  # Pastikan ini valid
