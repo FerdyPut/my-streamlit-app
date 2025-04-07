@@ -525,23 +525,29 @@ with tab1:
 with tab2:
     st.subheader("Produk yang sudah diinput")
 
-    # Load data saat aplikasi dijalankan
     df_overview = load_from_excel()
+
+    # Cek apakah file tidak kosong
     if not df_overview.empty:
-        list_surveyor = df_overview["Nama Surveyor"].dropna().unique().tolist()
+        # Filter: hanya data yang lengkap (valid)
+        df_valid = df_overview.dropna(subset=["Nama Surveyor", "Nama Produk", "Kode Outlet"])
+
+        list_surveyor = df_valid["Nama Surveyor"].unique().tolist()
         if list_surveyor:
             nama_surveyor_selected = st.selectbox("Nama Anda", list_surveyor)
-            df_filtered = df_overview[df_overview["Nama Surveyor"] == nama_surveyor_selected]
-            
+            df_filtered = df_valid[df_valid["Nama Surveyor"] == nama_surveyor_selected]
+
             if not df_filtered.empty:
                 df_filtered["Status"] = "Sudah terinput semua"
                 st.dataframe(df_filtered[["Timestamp Pengisian", "Nama Produk", "Kode Outlet", "Status"]], hide_index=True)
             else:
-                st.info(f"Tidak ada produk yang diinput oleh {nama_surveyor_selected}.")
+                st.info(f"Tidak ada produk yang valid diinput oleh {nama_surveyor_selected}.")
+        else:
+            st.info("Belum ada data valid yang diinput.")
     else:
         st.warning("Belum ada data yang tersimpan.")
 
-    # Simulasi tombol konfirmasi
+    # Konfirmasi hapus
     st.info("Hapus jika semua sudah lengkap dalam 1 komponen produk!")
     if "confirm_delete" not in st.session_state:
         st.session_state.confirm_delete = False
@@ -550,7 +556,7 @@ with tab2:
         st.session_state.confirm_delete = True
 
     if st.session_state.confirm_delete:
-        st.warning("Apakah kamu yakin ingin menghapus semua data overview? Ini tidak bisa dibatalkan.")
+        st.warning("Apakah kamu yakin ingin menghapus semua data overview?")
         col1, col2 = st.columns(2)
         with col1:
             if st.button("Ya, hapus semua"):
@@ -562,6 +568,7 @@ with tab2:
         with col2:
             if st.button("Batal"):
                 st.session_state.confirm_delete = False
+
 
 with tab3:
     if "admin_login" not in st.session_state:
