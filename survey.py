@@ -535,7 +535,7 @@ with tab2:
             
             if not df_filtered.empty:
                 df_filtered["Status"] = "Sudah terinput semua"
-                st.dataframe(df_filtered[["Timestamp Pengisian", "Nama Produk", "Status"]], hide_index=True)
+                st.dataframe(df_filtered[["Timestamp Pengisian", "Nama Produk", "Kode Outlet", "Status"]], hide_index=True)
             else:
                 st.info(f"Tidak ada produk yang diinput oleh {nama_surveyor_selected}.")
     else:
@@ -545,7 +545,7 @@ with tab2:
     # **Tombol Hapus Selalu Ada**
     st.info("Hapus jika semua sudah lengkap dalam 1 komponen produk!")
     if st.button("Hapus Semua Data Overview"):
-        st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk", "Status"])
+        st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk", "Kode Outlet", "Status"])
         save_to_excel(st.session_state["overview"], EXCEL_FILE)
         st.success("Semua data overview telah dihapus!")
         st.rerun()
