@@ -398,6 +398,7 @@ with tab1:
                         "Timestamp Pengisian": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                         "Nama Surveyor": nama_surveyor,
                         "Nama Produk": nama_produk,
+                        "Kode Outlet": kode_outlet,
                         "Status": "Sudah Terinput"
                     }])
 
@@ -520,7 +521,7 @@ with tab1:
                     
                     # Simpan ke overview_data.xlsx
                     save_to_excel(st.session_state["overview"], EXCEL_FILE)
-                    st.info("Jika sudah menginput silahkan input kembali, dengan menmilih kembali produk lainnya yang sesuai (jika masih dalam satu outlet yang sama). Jika sudah berbeda outlet/kota, maka silahkan refresh website dan input kembali dari awal.")   
+                    st.info("Jika sudah menginput silahkan input kembali, dengan memilih kembali produk lainnya yang sesuai (jika masih dalam satu outlet yang sama). Jika sudah berbeda outlet/kota, maka silahkan refresh website dan input kembali dari awal.")   
 with tab2:
     st.subheader("Produk yang sudah diinput")
 
