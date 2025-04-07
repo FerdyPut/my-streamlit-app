@@ -381,7 +381,7 @@ with tab1:
                 errors = []
 
                 # Validasi field wajib utama
-                if not nama_surveyor or alamat_outlet or not kode_outlet or not kota:
+                if not nama_surveyor or not alamat_outlet or not kode_outlet or not kota:
                     errors.append("Nama Surveyor, Alamat Outlet, Kode Outlet, dan Kota wajib diisi!")
                 if "overview" not in st.session_state or st.session_state["overview"].empty:
                     st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk", "Status"])
