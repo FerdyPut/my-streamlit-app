@@ -541,22 +541,27 @@ with tab2:
     else:
         st.warning("Belum ada data yang tersimpan.")
 
-    # **Tombol Hapus dengan Konfirmasi**
+    # Simulasi tombol konfirmasi
     st.info("Hapus jika semua sudah lengkap dalam 1 komponen produk!")
-    
-    with st.expander("⚠️ Konfirmasi Penghapusan Data"):
-        konfirmasi = st.checkbox("Saya yakin ingin menghapus semua data overview")
+    if "confirm_delete" not in st.session_state:
+        st.session_state.confirm_delete = False
 
-        if konfirmasi:
-            if st.button("Hapus Semua Data Overview", type="primary"):
+    if st.button("Hapus Semua Data Overview"):
+        st.session_state.confirm_delete = True
+
+    if st.session_state.confirm_delete:
+        st.warning("Apakah kamu yakin ingin menghapus semua data overview? Ini tidak bisa dibatalkan.")
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("Ya, hapus semua"):
                 st.session_state["overview"] = pd.DataFrame(columns=["Timestamp Pengisian", "Nama Surveyor", "Nama Produk", "Kode Outlet", "Status"])
                 save_to_excel(st.session_state["overview"], EXCEL_FILE)
                 st.success("Semua data overview telah dihapus!")
+                st.session_state.confirm_delete = False
                 st.rerun()
-        else:
-            st.warning("Centang konfirmasi terlebih dahulu untuk menghapus data.")
-
-
+        with col2:
+            if st.button("Batal"):
+                st.session_state.confirm_delete = False
 
 with tab3:
     if "admin_login" not in st.session_state:
