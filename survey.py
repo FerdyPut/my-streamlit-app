@@ -398,7 +398,6 @@ with tab1:
                         "Timestamp Pengisian": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                         "Nama Surveyor": nama_surveyor,
                         "Nama Produk": nama_produk,
-                        "Kode Outlet": kode_outlet,
                         "Status": "Sudah Terinput"
                     }])
 
